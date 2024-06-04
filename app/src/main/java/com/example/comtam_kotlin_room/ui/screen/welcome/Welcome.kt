@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -22,13 +23,17 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.comtam_kotlin_room.R
 import com.example.comtam_kotlin_room.utils.Route
+import kotlinx.coroutines.delay
 
 @Composable
 fun WelcomeScreen(navController: NavHostController) {
-    val handler = Handler(Looper.getMainLooper())
-    handler.postDelayed({
-        navController.navigate(Route.MANAGER.screen)
-    }, 3000)
+
+    LaunchedEffect(key1 = true) {
+        delay(3000L)
+        navController.navigate(Route.MANAGER.screen) {
+            popUpTo(Route.WELCOME.screen) { inclusive = true }
+        }
+    }
     Column(modifier = Modifier.fillMaxSize().background(Color(0xff282222)),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
