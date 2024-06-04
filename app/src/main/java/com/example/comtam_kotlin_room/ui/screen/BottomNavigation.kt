@@ -1,6 +1,7 @@
 package com.example.comtam_kotlin_room.ui.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,13 +15,18 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.AutoMode
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Label
+import androidx.compose.material.icons.outlined.LeaveBagsAtHome
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material.icons.rounded.AutoMode
 import androidx.compose.material.icons.rounded.Bookmark
+import androidx.compose.material.icons.rounded.Label
+import androidx.compose.material.icons.rounded.LeaveBagsAtHome
 import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -66,7 +72,6 @@ fun BottomNavigation(){
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyBottomAppBar() {
-    val context = LocalContext.current.applicationContext
     val navigationController = rememberNavController()
     val selected = remember {
         mutableStateOf(Icons.Default.Home)
@@ -74,8 +79,8 @@ fun MyBottomAppBar() {
 
     Scaffold (
         topBar = {
+            Column(Modifier.fillMaxWidth()) {
                  TopAppBar(
-
                      title = {
                          Row (modifier = Modifier.fillMaxWidth(),
                              verticalAlignment = Alignment.CenterVertically) {
@@ -83,7 +88,7 @@ fun MyBottomAppBar() {
                                  painter = painterResource(id = R.drawable.logo),
                                  contentDescription ="",
                                  contentScale = ContentScale.Fit,
-                                 modifier = Modifier.fillMaxWidth(0.2f)
+                                 modifier = Modifier.fillMaxWidth(0.12f)
                                  )
                              Text(text = "Cum tứm đim")
 
@@ -95,92 +100,103 @@ fun MyBottomAppBar() {
                      ),
 
                      )
+            Divider(thickness = 2.dp, color = Color.Black)
+            }
+
         },
 
+
         bottomBar = {
-            BottomAppBar(
-                modifier = Modifier.shadow(8.dp, shape = RoundedCornerShape(10.dp)),
-                containerColor = Color(0xFFFFFFFF)
-            ) {
-                IconButton(
-                    onClick = {
-                        selected.value = Icons.Default.Home
-                        navigationController.navigate(Route.Home.screen){
-                            popUpTo(0)
+            Column(Modifier.fillMaxWidth()) {
+                Divider(thickness = 2.dp, color = Color.Black)
 
-                        }
-                    },
-                    modifier = Modifier.weight(1f)
-                )
-                {
-                    Icon( if (selected.value == Icons.Default.Home)  Icons.Default.Home  else  Icons.Outlined.Home,
-                        contentDescription = "",
-                        modifier = Modifier.size(24.dp),
+                BottomAppBar(
+                    containerColor = Color(0xFF312C2C)
+                ) {
+                    IconButton(
+                        onClick = {
+                            selected.value = Icons.Default.Home
+                            navigationController.navigate(Route.Home.screen){
+                                popUpTo(0)
+
+                            }
+                        },
+                        modifier = Modifier.weight(1f)
                     )
+                    {
+                        Icon( if (selected.value == Icons.Default.Home)  Icons.Default.Home  else  Icons.Outlined.Home,
+                            contentDescription = "",
+                            modifier = Modifier.size(24.dp),
+                            tint = Color.White
+                        )
+
+                    }
+
+                    IconButton(
+                        onClick = {
+                            selected.value = Icons.Rounded.ShoppingCart
+                            navigationController.navigate(Route.THONGKE.screen){
+                                popUpTo(0)
+                            }
+                        },
+                        modifier = Modifier.weight(1f)
+                    )
+                    {
+                        Icon(if (selected.value == Icons.Rounded.ShoppingCart) Icons.Rounded.ShoppingCart  else  Icons.Outlined.ShoppingCart,
+                            contentDescription = "",
+                            modifier = Modifier.size(24.dp),
+                            tint = Color.White
+
+                        )
+
+                    }
+
+
+                    IconButton(
+                        onClick = {
+                            selected.value = Icons.Rounded.LeaveBagsAtHome
+                            navigationController.navigate(Route.MANAGER.screen){
+                                popUpTo(0)
+                            }
+                        },
+                        modifier = Modifier.weight(1f)
+                    )
+                    {
+                        Icon(if (selected.value == Icons.Rounded.LeaveBagsAtHome) painterResource(id = R.drawable.shoppingmode_fill_24px) else painterResource(id = R.drawable.shoppingmode_24px),
+                            contentDescription = "",
+                            modifier = Modifier.size(24.dp),
+                            tint = Color.White
+
+                        )
+
+                    }
+
+
+
+                    IconButton(
+                        onClick = {
+                            selected.value = Icons.Default.Person
+                            navigationController.navigate(Route.SUPPORT.screen){
+                                popUpTo(0)
+                            }
+                        },
+                        modifier = Modifier.weight(1f)
+                    )
+                    {
+                        Icon(if (selected.value == Icons.Default.Person) Icons.Default.Person else Icons.Outlined.Person,
+                            contentDescription = "",
+                            modifier = Modifier.size(24.dp),
+                            tint = Color.White
+
+                        )
+
+                    }
+
+
 
                 }
-
-                IconButton(
-                    onClick = {
-                        selected.value = Icons.Rounded.ShoppingCart
-                        navigationController.navigate(Route.THONGKE.screen){
-                            popUpTo(0)
-                        }
-                    },
-                    modifier = Modifier.weight(1f)
-                )
-                {
-                    Icon(if (selected.value == Icons.Rounded.ShoppingCart) Icons.Rounded.ShoppingCart  else  Icons.Outlined.ShoppingCart,
-                        contentDescription = "",
-                        modifier = Modifier.size(24.dp),
-                    )
-
-                }
-
-
-                IconButton(
-                    onClick = {
-                        selected.value = Icons.Rounded.AutoMode
-                        navigationController.navigate(Route.MANAGER.screen){
-                            popUpTo(0)
-                        }
-                    },
-                    modifier = Modifier.weight(1f)
-                )
-                {
-                    Icon(if (selected.value == Icons.Rounded.AutoMode) Icons.Rounded.AutoMode else Icons.Outlined.AutoMode,
-                        contentDescription = "",
-                        modifier = Modifier.size(24.dp),
-                    )
-
-                }
-
-
-
-                IconButton(
-                    onClick = {
-                        selected.value = Icons.Default.Person
-                        navigationController.navigate(Route.SUPPORT.screen){
-                            popUpTo(0)
-                        }
-                    },
-                    modifier = Modifier.weight(1f)
-                )
-                {
-                    Icon(if (selected.value == Icons.Default.Person) Icons.Default.Person else Icons.Outlined.Person,
-                        contentDescription = "",
-                        modifier = Modifier.size(24.dp),
-                    )
-
-                }
-
-
-
-
-
-
-
             }
+
         }
     )
     {paddingValues ->
