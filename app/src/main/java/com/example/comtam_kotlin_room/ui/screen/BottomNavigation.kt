@@ -58,6 +58,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.example.comtam_kotlin_room.R
+import com.example.comtam_kotlin_room.ui.screen.dish.AddDishScreen
+import com.example.comtam_kotlin_room.ui.screen.dish.ManagerDishScreen
+import com.example.comtam_kotlin_room.ui.screen.dish.UpdateDishScreen
 import com.example.comtam_kotlin_room.ui.screen.home.DetailsCart
 import com.example.comtam_kotlin_room.data.Database
 import com.example.comtam_kotlin_room.ui.screen.category.CategoryScreen
@@ -214,11 +217,11 @@ fun MyBottomAppBar( viewModelCategory: CategoryViewModel) {
 
         }
     )
+
     { paddingValues ->
 
 
         val state = viewModelCategory.state.collectAsState().value
-
 
 
         NavHost(
@@ -231,6 +234,10 @@ fun MyBottomAppBar( viewModelCategory: CategoryViewModel) {
             composable(Route.MANAGER.screen) { MangerScreen(navigationController) }
             composable(Route.MANAGER.screen) { MangerScreen(navController = navigationController) }
             composable(Route.THONGKE.screen) { ThongKe() }
+         
+            composable(Route.ManegerDish.screen){ ManagerDishScreen(navigationController) }
+            composable(Route.AddDish.screen){ AddDishScreen(navigationController) }
+            composable(Route.UpdateDish.screen){ UpdateDishScreen(navigationController) }
             composable(Route.CategoryScreen.screen) {
                 CategoryScreen(
                     state = state,
@@ -239,6 +246,7 @@ fun MyBottomAppBar( viewModelCategory: CategoryViewModel) {
                 )
             }
             composable(Route.SUPPORT.screen) { SupportScreen() }
+
 
 
         }
