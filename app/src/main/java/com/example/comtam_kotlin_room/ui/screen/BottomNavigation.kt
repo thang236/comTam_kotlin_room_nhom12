@@ -58,6 +58,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.example.comtam_kotlin_room.R
+import com.example.comtam_kotlin_room.ui.screen.home.DetailsCart
 import com.example.comtam_kotlin_room.data.Database
 import com.example.comtam_kotlin_room.ui.screen.category.CategoryScreen
 import com.example.comtam_kotlin_room.ui.screen.category.CategoryViewModel
@@ -222,6 +223,11 @@ fun MyBottomAppBar( viewModelCategory: CategoryViewModel) {
 
         NavHost(navController = navigationController,
             startDestination = Route.Home.screen,
+            modifier = Modifier.padding(paddingValues)
+        ) {
+            composable(Route.Home.screen){ HomeScreen(navigationController)}
+            composable(Route.DetailCart.screen){ DetailsCart(navigationController)}
+            composable(Route.MANAGER.screen){ MangerScreen() }
             modifier = Modifier.padding(paddingValues),
 
             ) {
