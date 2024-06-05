@@ -30,81 +30,51 @@ fun HomeScreen(navigationController: NavHostController) {
         ListItem("Đơn hàng CT2E2206", "Chấp nhận", "500.000 đ"),
         ListItem("Đơn hàng CT2E23E", "Từ chối", "100.800 đ"),
         ListItem("Đơn hàng CT2E12E", "Từ chối", "101.854 đ"),
+        ListItem("Đơn hàng CT2E12E", "Từ chối", "101.854 đ"),
+        ListItem("Đơn hàng CT2E12E", "Từ chối", "101.854 đ"),
+        ListItem("Đơn hàng CT2E12E", "Từ chối", "101.854 đ"),
+        ListItem("Đơn hàng CT2E12E", "Từ chối", "101.854 đ"),
+        ListItem("Đơn hàng CT2E12E", "Từ chối", "101.854 đ"),
+        ListItem("Đơn hàng CT2E12E", "Từ chối", "101.854 đ"),
+
         )
 
     // Sử dụng LazyColumn để hiển thị danh sách
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(Color.Black)) {}
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .padding(top = 7.dp)
-        .background(Color(0xff252121))) {
-      Column(  modifier = Modifier.fillMaxSize(),
-          horizontalAlignment = Alignment.CenterHorizontally) {
-          Row(
-              modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(top = 20.dp),
-              horizontalArrangement = Arrangement.SpaceBetween
-          ) {
+
+
+      Column(  modifier = Modifier.
+      fillMaxSize().
+      background(Color(0xff252121)),
+          horizontalAlignment = Alignment.CenterHorizontally,
+          verticalArrangement = Arrangement.Center
+
+      ) {
+
               Text(
-                  text = "Today: ",
+                  text = "Today:23-09-2024 ",
                   style = MaterialTheme.typography.titleMedium,
                   color = Color.White,
-                  modifier = Modifier.padding(start = 140.dp)
+                  modifier = Modifier.padding(top = 16.dp)
+
               )
 
               Text(
-                  text = "23-09-2024",
+                  text = "Số lượng đơn: 1",
                   style = MaterialTheme.typography.titleMedium,
                   color = Color.White,
-                  modifier = Modifier.padding(end = 130.dp)
-              )
-          }
-          Row(
-              modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(top = 10.dp),
-              horizontalArrangement = Arrangement.SpaceBetween
-          ) {
-              Text(
-                  text = "Số lượng đơn: ",
-                  style = MaterialTheme.typography.titleMedium,
-                  color = Color.White,
-                  modifier = Modifier.padding(start = 150.dp)
               )
 
-              Text(
-                  text = "1",
-                  style = MaterialTheme.typography.titleMedium,
-                  color = Color.White,
-                  modifier = Modifier.padding(end = 140.dp)
-              )
-          }
-          Row(
-              modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(top = 10.dp, bottom = 30.dp),
-              horizontalArrangement = Arrangement.SpaceBetween
-          ) {
-              Text(
-                  text = "Doanh thu: ",
-                  style = MaterialTheme.typography.titleMedium,
-                  color = Color.White,
-                  modifier = Modifier.padding(start = 130.dp)
-              )
 
               Text(
-                  text = "500.000 đ",
+                  text = "Doanh thu: 500.000 đ",
                   style = MaterialTheme.typography.titleMedium,
                   color = Color.White,
-                  modifier = Modifier.padding(end = 120.dp)
               )
-          }
+
+
           LazyColumn(
               modifier = Modifier
-                  .padding(top = 7.dp)
+                  .padding(top = 7.dp, start = 16.dp, end = 16.dp)
                   .fillMaxSize()
                   .background(Color(0xff252121))
           )
@@ -115,7 +85,7 @@ fun HomeScreen(navigationController: NavHostController) {
           }
       }
 
-    }
+
 }
 
 @Composable
@@ -124,8 +94,8 @@ fun ListItemView(item: ListItem,navigationController: NavHostController) {
     Card(
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
-            .padding(start = 20.dp, bottom = 10.dp, top = 10.dp)
-            .width(368.dp)
+            .padding( top = 10.dp)
+
             .height(110.dp)
             .fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp) ,
@@ -154,7 +124,7 @@ fun ListItemView(item: ListItem,navigationController: NavHostController) {
                 )
                 Text(
                     text = "||",
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleLarge,
                     color = Color.White,
                     modifier = Modifier
                         .padding(start = 20.dp)

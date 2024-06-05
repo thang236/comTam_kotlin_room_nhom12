@@ -214,37 +214,34 @@ fun MyBottomAppBar( viewModelCategory: CategoryViewModel) {
 
         }
     )
-    {paddingValues ->
+    { paddingValues ->
 
 
         val state = viewModelCategory.state.collectAsState().value
 
 
 
-        NavHost(navController = navigationController,
+        NavHost(
+            navController = navigationController,
             startDestination = Route.Home.screen,
             modifier = Modifier.padding(paddingValues)
         ) {
-            composable(Route.Home.screen){ HomeScreen(navigationController)}
-            composable(Route.DetailCart.screen){ DetailsCart(navigationController)}
-            composable(Route.MANAGER.screen){ MangerScreen() }
-            modifier = Modifier.padding(paddingValues),
+            composable(Route.Home.screen) { HomeScreen(navigationController) }
+            composable(Route.DetailCart.screen) { DetailsCart(navigationController) }
+            composable(Route.MANAGER.screen) { MangerScreen(navigationController) }
+            composable(Route.MANAGER.screen) { MangerScreen(navController = navigationController) }
+            composable(Route.THONGKE.screen) { ThongKe() }
+            composable(Route.CategoryScreen.screen) {
+                CategoryScreen(
+                    state = state,
+                    onEvent = viewModelCategory::onEvent,
+                    navController = navigationController
+                )
+            }
+            composable(Route.SUPPORT.screen) { SupportScreen() }
 
-            ) {
 
-
-
-            composable(Route.Home.screen){ HomeScreen()}
-            composable(Route.MANAGER.screen){ MangerScreen(navController = navigationController) }
-            composable(Route.THONGKE.screen){ ThongKe() }
-            composable(Route.SUPPORT.screen){ SupportScreen() }
-            composable(Route.CategoryScreen.screen){ CategoryScreen(
-                state = state,
-                onEvent = viewModelCategory::onEvent ,
-                navController = navigationController
-            )}
         }
-
     }
 
 }
