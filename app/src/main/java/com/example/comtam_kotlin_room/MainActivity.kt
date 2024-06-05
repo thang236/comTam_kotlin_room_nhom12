@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModel
@@ -17,7 +18,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.example.comtam_kotlin_room.data.Database
 import com.example.comtam_kotlin_room.ui.screen.BottomNavigation
+import com.example.comtam_kotlin_room.ui.screen.category.CategoryScreen
 import com.example.comtam_kotlin_room.ui.screen.category.CategoryViewModel
+import com.example.comtam_kotlin_room.ui.screen.dish.AddDishScreen
+import com.example.comtam_kotlin_room.ui.screen.dish.ManagerDishScreen
+import com.example.comtam_kotlin_room.ui.screen.dish.UpdateDishScreen
 import com.example.comtam_kotlin_room.ui.screen.home.HomeScreen
 import com.example.comtam_kotlin_room.ui.screen.login.LoginScreen
 import com.example.comtam_kotlin_room.ui.screen.welcome.WelcomeScreen
@@ -45,12 +50,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val state = viewModelCategory.state.collectAsState().value
+
 
             ComTam_kotlin_roomTheme {
                 val navController = rememberNavController()
-
-
-
                 NavHost(
                     navController = navController,
                     startDestination = Route.WELCOME.screen
@@ -59,11 +63,21 @@ class MainActivity : ComponentActivity() {
                         WelcomeScreen(navController)
                     }
                     composable(Route.Home.screen){
-                        BottomNavigation(viewModelCategory)
+                        BottomNavigation(viewModelCategory, navController)
 
                     }
                     composable(Route.MANAGER.screen){
                         LoginScreen(navController)
+                    }
+                    composable(Route.ManegerDish.screen){ ManagerDishScreen(navController) }
+                    composable(Route.AddDish.screen){ AddDishScreen(navController) }
+                    composable(Route.UpdateDish.screen){ UpdateDishScreen(navController) }
+                    composable(Route.CategoryScreen.screen) {
+                        CategoryScreen(
+                            state = state,
+                            onEvent = viewModelCategory::onEvent,
+                            navController = navController
+                        )
                     }
 
 

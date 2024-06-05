@@ -54,7 +54,7 @@ fun MangerScreen(navController: NavHostController) {
         Row(
             modifier = Modifier
                 .padding(top = 10.dp)
-                .clickable { },
+                .clickable { navController.navigate(Route.ManegerDish.screen)},
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(

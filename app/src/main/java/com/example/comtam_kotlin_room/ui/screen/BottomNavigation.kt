@@ -74,12 +74,12 @@ import com.example.comtam_kotlin_room.utils.Route
 
 
 @Composable
-fun BottomNavigation( viewModelCategory: CategoryViewModel){
+fun BottomNavigation( viewModelCategory: CategoryViewModel, navController: NavHostController){
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        MyBottomAppBar(viewModelCategory)
+        MyBottomAppBar(viewModelCategory, navController)
     }
 }
 
@@ -87,7 +87,7 @@ fun BottomNavigation( viewModelCategory: CategoryViewModel){
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 
-fun MyBottomAppBar( viewModelCategory: CategoryViewModel) {
+fun MyBottomAppBar( viewModelCategory: CategoryViewModel, navController: NavHostController) {
 
     val navigationController = rememberNavController()
     val selected = remember {
@@ -221,7 +221,6 @@ fun MyBottomAppBar( viewModelCategory: CategoryViewModel) {
     { paddingValues ->
 
 
-        val state = viewModelCategory.state.collectAsState().value
 
 
         NavHost(
@@ -231,20 +230,12 @@ fun MyBottomAppBar( viewModelCategory: CategoryViewModel) {
         ) {
             composable(Route.Home.screen) { HomeScreen(navigationController) }
             composable(Route.DetailCart.screen) { DetailsCart(navigationController) }
-            composable(Route.MANAGER.screen) { MangerScreen(navigationController) }
-            composable(Route.MANAGER.screen) { MangerScreen(navController = navigationController) }
+//            composable(Route.MANAGER.screen) { MangerScreen(navigationController) }
+            composable(Route.MANAGER.screen) { MangerScreen(navController) }
             composable(Route.THONGKE.screen) { ThongKe() }
          
-            composable(Route.ManegerDish.screen){ ManagerDishScreen(navigationController) }
-            composable(Route.AddDish.screen){ AddDishScreen(navigationController) }
-            composable(Route.UpdateDish.screen){ UpdateDishScreen(navigationController) }
-            composable(Route.CategoryScreen.screen) {
-                CategoryScreen(
-                    state = state,
-                    onEvent = viewModelCategory::onEvent,
-                    navController = navigationController
-                )
-            }
+
+
             composable(Route.SUPPORT.screen) { SupportScreen() }
 
 

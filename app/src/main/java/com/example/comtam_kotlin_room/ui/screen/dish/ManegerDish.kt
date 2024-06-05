@@ -1,14 +1,19 @@
 package com.example.comtam_kotlin_room.ui.screen.dish
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -42,25 +47,67 @@ val items = listOf(
     MenuItem(10, "Sườn trứng", "30K", R.drawable.comtam),
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ManagerDishScreen(navigationController: NavHostController){
-    Box(
+    Scaffold(
+        topBar = {
+            Column(Modifier.fillMaxWidth()) {
+                TopAppBar(
+                    title = {
+                        Row (modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically) {
+                            Icon(Icons.Default.ArrowBackIosNew, contentDescription ="" ,
+                                Modifier.clickable { navigationController.popBackStack() })
+                            Image(
+                                painter = painterResource(id = R.drawable.logo),
+                                contentDescription ="",
+                                contentScale = ContentScale.Fit,
+                                modifier = Modifier.fillMaxWidth(0.12f)
+                            )
+                            Text(text = "Cum tứm đim")
+
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color(0xff252121),
+                        titleContentColor = Color.White,
+                    ),
+
+                    )
+                Divider(thickness = 2.dp, color = Color.Black)
+            }
+
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = {
+                navigationController.navigate(Route.AddDish.screen)
+            }, contentColor = Color.White, containerColor = Color(0xFF2F2D2D)) {
+                Icon(imageVector = Icons.Rounded.Add,
+                    contentDescription = "Add new category")
+
+            }
+        },
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF252121))
-    ) {
+            .background(Color(0xFF252121)))
+
+
+
+    {
+
+
         ManegerDish(items, navigationController)
+
     }
+
 }
 
 @Composable
 fun ManegerDish(items: List<MenuItem>, navigationController: NavHostController) {
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF252121))
-    ) {
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -71,19 +118,8 @@ fun ManegerDish(items: List<MenuItem>, navigationController: NavHostController) 
             }
         }
 
-        FloatingActionButton(
-            onClick = { navigationController.navigate(Route.AddDish.screen) },
-            modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.BottomEnd)
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.baseline_add_24),
-                contentDescription = "Add",
-                tint = Color.Black
-            )
-        }
-    }
+
+
 }
 
 @Composable
