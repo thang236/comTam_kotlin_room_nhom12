@@ -7,7 +7,9 @@ sealed class Route(val screen: String) {
     data object THONGKE : Route("THONGKE")
     data object MANAGER : Route("MANAGER")
     data object SUPPORT : Route("SUPPORT")
-
+    data object ManegerDish : Route("ManegerDish")
+    data object AddDish : Route("AddDish")
+    data object UpdateDish : Route("UpdateDish")
 
 
 

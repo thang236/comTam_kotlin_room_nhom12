@@ -52,6 +52,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.comtam_kotlin_room.R
+import com.example.comtam_kotlin_room.ui.screen.dish.AddDishScreen
+import com.example.comtam_kotlin_room.ui.screen.dish.ManagerDishScreen
+import com.example.comtam_kotlin_room.ui.screen.dish.UpdateDishScreen
 import com.example.comtam_kotlin_room.ui.screen.home.HomeScreen
 import com.example.comtam_kotlin_room.ui.screen.manager.MangerScreen
 import com.example.comtam_kotlin_room.ui.screen.support.SupportScreen
@@ -201,14 +204,16 @@ fun MyBottomAppBar() {
     )
     {paddingValues ->
         NavHost(navController = navigationController,
-            startDestination = Route.Home.screen,
+            startDestination = Route.ManegerDish.screen,
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(Route.Home.screen){ HomeScreen()}
             composable(Route.MANAGER.screen){ MangerScreen() }
             composable(Route.THONGKE.screen){ ThongKe() }
             composable(Route.SUPPORT.screen){ SupportScreen() }
-
+            composable(Route.ManegerDish.screen){ ManagerDishScreen(navigationController) }
+            composable(Route.AddDish.screen){ AddDishScreen(navigationController) }
+            composable(Route.UpdateDish.screen){ UpdateDishScreen(navigationController) }
         }
 
     }
