@@ -190,6 +190,8 @@ fun ListItemView(item: ListItem,navigationController: NavHostController) {
     }
 }
 @Composable
+
 fun HomeScreenPreview() {
     HomeScreen(navigationController = rememberNavController())
 }
+
