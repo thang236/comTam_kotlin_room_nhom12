@@ -1,5 +1,7 @@
 package com.example.comtam_kotlin_room.ui.screen.dish
 
+import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -7,25 +9,68 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.comtam_kotlin_room.R
 import com.example.comtam_kotlin_room.ui.theme.ComTam_kotlin_roomTheme
+import com.example.comtam_kotlin_room.utils.Route
 
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AddDishScreen(navigationController: NavHostController) {
     ComTam_kotlin_roomTheme {
-        Surface(modifier = Modifier.fillMaxSize(), color = Color(0xFF252121)) {
+        Scaffold(
+            topBar = {
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xFF242020))
+                ) {
+                    TopAppBar(
+                        title = {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(Color(0xFF242020)),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(Icons.Default.ArrowBackIosNew, contentDescription ="" ,
+                                    Modifier.clickable { navigationController.popBackStack() })
+                                Image(
+                                    painter = painterResource(id = R.drawable.logo),
+                                    contentDescription ="",
+                                    contentScale = ContentScale.Fit,
+                                    modifier = Modifier.fillMaxWidth(0.12f)
+                                )
+                                Text(text = "Cum tứm đim", color = Color.White)
+
+                            }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = Color(0xFF252121),
+                            titleContentColor = Color.White,
+                        ),
+                    )
+                    Divider(thickness = 2.dp, color = Color.Black)
+                }
+            },
+
+            ) {
             AddDish(navigationController)
         }
     }
@@ -45,24 +90,12 @@ fun AddDish(navigationController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp).verticalScroll(scrollState),
+            .verticalScroll(scrollState)
+            .background(Color(0xFF242020))
+            .padding(16.dp),  // Added padding to the column
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        SmallTopAppBar(
-            title = { Text("Add", color = Color.White) },
-            navigationIcon = {
-                IconButton(
-                    onClick = { navigationController.popBackStack() }
-                ) {
-                    Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
-                }
-            },
-            colors = TopAppBarDefaults.smallTopAppBarColors(
-                containerColor = Color(0xFF252121)
-            )
-        )
-
         Spacer(modifier = Modifier.height(16.dp))
 
         Box(
@@ -88,7 +121,8 @@ fun AddDish(navigationController: NavHostController) {
             label = { Text("Giá") },
             modifier = Modifier
                 .background(Color.White)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp), // Added padding to the TextField
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color.White
             )
@@ -102,7 +136,8 @@ fun AddDish(navigationController: NavHostController) {
             label = { Text("Tên món ăn") },
             modifier = Modifier
                 .background(Color.White)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp), // Added padding to the TextField
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color.White
             )
@@ -112,7 +147,9 @@ fun AddDish(navigationController: NavHostController) {
 
         Button(
             onClick = { /* Handle save action */ },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp), // Added padding to the Button
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA000))
         ) {
             Text("Thêm", color = Color.White, fontSize = 18.sp)
