@@ -10,7 +10,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.rounded.Add
@@ -48,16 +50,23 @@ val items = listOf(
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ManagerDishScreen(navigationController: NavHostController){
     Scaffold(
         topBar = {
-            Column(Modifier.fillMaxWidth()) {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xFF242020))
+            ) {
                 TopAppBar(
                     title = {
-                        Row (modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(Color(0xFF242020)),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                             Icon(Icons.Default.ArrowBackIosNew, contentDescription ="" ,
                                 Modifier.clickable { navigationController.popBackStack() })
                             Image(
@@ -66,60 +75,45 @@ fun ManagerDishScreen(navigationController: NavHostController){
                                 contentScale = ContentScale.Fit,
                                 modifier = Modifier.fillMaxWidth(0.12f)
                             )
-                            Text(text = "Cum tứm đim")
+                            Text(text = "Cum tứm đim", color = Color.White)
 
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color(0xff252121),
+                        containerColor = Color(0xFF252121),
                         titleContentColor = Color.White,
                     ),
-
-                    )
+                )
                 Divider(thickness = 2.dp, color = Color.Black)
             }
-
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 navigationController.navigate(Route.AddDish.screen)
-            }, contentColor = Color.White, containerColor = Color(0xFF2F2D2D)) {
-                Icon(imageVector = Icons.Rounded.Add,
-                    contentDescription = "Add new category")
-
+            }, contentColor = Color.White, containerColor = Color(0xFFbdf1e9)) {
+                Icon(imageVector = Icons.Rounded.Add, contentDescription = "Add", tint = Color.Black)
             }
         },
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF252121)))
 
-
-
-    {
-
-
-        ManegerDish(items, navigationController)
-
+        ) { inpadding ->
+        ManegerDish(items, navigationController,inpadding)
     }
-
 }
 
 @Composable
-fun ManegerDish(items: List<MenuItem>, navigationController: NavHostController) {
+fun ManegerDish(items: List<MenuItem>, navigationController: NavHostController,inpadding: PaddingValues) {
 
+    LazyColumn(
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp)
+        modifier = Modifier
+            .fillMaxSize().padding(inpadding)
+            .background(Color(0xFF242020)),
+
         ) {
-            itemsIndexed(items) { index, item ->
-                MenuItemCard(index + 1, item, navigationController = navigationController)
-            }
+        itemsIndexed(items) { index, item ->
+            MenuItemCard(index + 1, item, navigationController = navigationController)
         }
-
-
-
+    }
 }
 
 @Composable
@@ -171,8 +165,9 @@ fun MenuItemCard(order: Int, item: MenuItem, navigationController: NavHostContro
                     tint = Color.White
                 )
             }
+            Spacer(modifier = Modifier.width(5.dp))
             IconButton(
-                onClick = { /* Handle delete action */ },
+                onClick = { },
                 modifier = Modifier
                     .size(24.dp)
                     .align(Alignment.CenterVertically)
@@ -191,6 +186,6 @@ fun MenuItemCard(order: Int, item: MenuItem, navigationController: NavHostContro
 @Composable
 fun DefaultPreview() {
     ComTam_kotlin_roomTheme {
-        MenuItemCard(order = 1, item = items[0], navigationController = rememberNavController())
+        ManagerDishScreen(navigationController = rememberNavController())
     }
 }

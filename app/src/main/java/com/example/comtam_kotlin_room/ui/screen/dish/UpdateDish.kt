@@ -1,5 +1,6 @@
 package com.example.comtam_kotlin_room.ui.screen.dish
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,25 +10,33 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -47,24 +56,50 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.comtam_kotlin_room.R
 import com.example.comtam_kotlin_room.ui.theme.ComTam_kotlin_roomTheme
+import com.example.comtam_kotlin_room.utils.Route
 
-class UpdateDishActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            ComTam_kotlin_roomTheme {
-                Surface(modifier = Modifier.fillMaxSize(), color = Color(0xFF252121)) {
-                    UpdateDishScreen(rememberNavController())
-                }
-            }
-        }
-    }
-}
-
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdateDishScreen(navigationController: NavHostController) {
     ComTam_kotlin_roomTheme {
-        Surface(modifier = Modifier.fillMaxSize(), color = Color(0xFF252121)) {
+        Scaffold(
+            topBar = {
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xFF242020))
+                ) {
+                    TopAppBar(
+                        title = {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(Color(0xFF242020)),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(Icons.Default.ArrowBackIosNew, contentDescription ="" ,
+                                    Modifier.clickable { navigationController.popBackStack() })
+                                Image(
+                                    painter = painterResource(id = R.drawable.logo),
+                                    contentDescription ="",
+                                    contentScale = ContentScale.Fit,
+                                    modifier = Modifier.fillMaxWidth(0.12f)
+                                )
+                                Text(text = "Cum tứm đim", color = Color.White)
+
+                            }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = Color(0xFF252121),
+                            titleContentColor = Color.White,
+                        ),
+                    )
+                    Divider(thickness = 2.dp, color = Color.Black)
+                }
+            },
+
+            ) {
             UpdateDish(navigationController)
         }
     }
@@ -76,28 +111,15 @@ fun UpdateDish(navigationController: NavHostController) {
 
     var price by remember { mutableStateOf(TextFieldValue("100k")) }
     var foodName by remember { mutableStateOf(TextFieldValue("Sườn")) }
-
+    val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .background(Color(0xFF242020))
+            .padding(horizontal = 16.dp).verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-
-        SmallTopAppBar(
-            title = { Text("Update", color = Color.White) },
-            navigationIcon = {
-                IconButton(
-                    onClick = { navigationController.popBackStack() }
-                ) {
-                    Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
-                }
-            },
-            colors = TopAppBarDefaults.smallTopAppBarColors(
-                containerColor = Color(0xFF252121)
-            )
-        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -116,7 +138,7 @@ fun UpdateDish(navigationController: NavHostController) {
             )
         }
 
-        Spacer(modifier = Modifier.height(150.dp))
+        Spacer(modifier = Modifier.height(80.dp))
 
         TextField(
             value = price,
@@ -124,7 +146,8 @@ fun UpdateDish(navigationController: NavHostController) {
             label = { Text("Giá") },
             modifier = Modifier
                 .background(Color.White)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+            ,
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color.White
             )
@@ -138,7 +161,8 @@ fun UpdateDish(navigationController: NavHostController) {
             label = { Text("Tên món ăn") },
             modifier = Modifier
                 .background(Color.White)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+            ,
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color.White
             )
@@ -148,7 +172,9 @@ fun UpdateDish(navigationController: NavHostController) {
 
         Button(
             onClick = { /* Handle save action */ },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp), // Add padding to the Button
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA000))
         ) {
             Text("Sửa", color = Color.White, fontSize = 18.sp)
