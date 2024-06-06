@@ -30,7 +30,7 @@ fun WelcomeScreen(navController: NavHostController) {
 
     LaunchedEffect(key1 = true) {
         delay(3000L)
-        navController.navigate(Route.MANAGER.screen) {
+        navController.navigate(Route.LOGIN.screen) {
             popUpTo(Route.WELCOME.screen) { inclusive = true }
         }
     }
