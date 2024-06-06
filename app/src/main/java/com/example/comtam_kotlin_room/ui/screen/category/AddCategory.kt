@@ -1,5 +1,6 @@
 package com.example.comtam_kotlin_room.ui.screen.category
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -29,6 +31,7 @@ fun DialogAdd(
     state: CategoryState,
     onEvent: (CategoryEvent) -> Unit
 ) {
+    var context = LocalContext.current
     Dialog(onDismissRequest = { onConfirmation() }) {
         Card(
             colors = CardDefaults.cardColors(
@@ -48,7 +51,12 @@ fun DialogAdd(
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.Start,
             ) {
-                Text(text = "Thêm loại món ăn", style = MaterialTheme.typography.titleLarge, modifier = Modifier.align(Alignment.CenterHorizontally), fontWeight = FontWeight.SemiBold)
+                Text(
+                    text = "Thêm loại món ăn",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    fontWeight = FontWeight.SemiBold
+                )
                 Spacer(modifier = Modifier.height(20.dp))
                 TextField(
                     modifier = Modifier.fillMaxWidth(),
@@ -64,8 +72,17 @@ fun DialogAdd(
                 Spacer(modifier = Modifier.height(20.dp))
                 Button(
                     onClick = {
-                        onEvent(CategoryEvent.SaveCategory(state.nameCategory.value))
-                        onConfirmation()
+                        if (state.nameCategory.value.length < 4) {
+                            Toast.makeText(
+                                context,
+                                "Loại món ăn không được để trống và phải có trên 4 ký tự",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else {
+                            onEvent(CategoryEvent.SaveCategory(state.nameCategory.value))
+                            onConfirmation()
+                        }
+
                     },
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     colors = ButtonDefaults.buttonColors(
