@@ -68,6 +68,8 @@ import com.example.comtam_kotlin_room.ui.screen.category.CategoryViewModel
 import com.example.comtam_kotlin_room.ui.screen.home.HomeScreen
 import com.example.comtam_kotlin_room.ui.screen.manager.MangerScreen
 import com.example.comtam_kotlin_room.ui.screen.support.SupportScreen
+import com.example.comtam_kotlin_room.ui.screen.thongke.BieuDo
+import com.example.comtam_kotlin_room.ui.screen.thongke.History
 import com.example.comtam_kotlin_room.ui.screen.thongke.ThongKe
 import com.example.comtam_kotlin_room.utils.Route
 
@@ -232,8 +234,9 @@ fun MyBottomAppBar( viewModelCategory: CategoryViewModel, navController: NavHost
             composable(Route.DetailCart.screen) { DetailsCart(navigationController) }
 //            composable(Route.MANAGER.screen) { MangerScreen(navigationController) }
             composable(Route.MANAGER.screen) { MangerScreen(navController) }
-            composable(Route.THONGKE.screen) { ThongKe() }
-         
+            composable(Route.THONGKE.screen) { ThongKe(navigationController) }
+         composable(Route.History.screen){ History()}
+            composable(Route.BieuDo.screen){ BieuDo(navigationController)}
 
 
             composable(Route.SUPPORT.screen) { SupportScreen() }
