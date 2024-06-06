@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
                         BottomNavigation(viewModelCategory, navController)
 
                     }
-                    composable(Route.MANAGER.screen){
+                    composable(Route.LOGIN.screen){
                         LoginScreen(navController)
                     }
                     composable(Route.ManegerDish.screen){ ManagerDishScreen(navController) }
