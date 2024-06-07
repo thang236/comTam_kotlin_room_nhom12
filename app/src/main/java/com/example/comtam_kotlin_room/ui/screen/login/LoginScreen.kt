@@ -43,9 +43,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.comtam_kotlin_room.DATABASE_INSTANCE
 import com.example.comtam_kotlin_room.R
 import com.example.comtam_kotlin_room.utils.Route
 
@@ -53,7 +53,7 @@ import com.example.comtam_kotlin_room.utils.Route
 @Composable
 fun LoginScreen(navController: NavHostController) {
 
-    val loginViewModel: LoginViewModel = viewModel()
+    val loginViewModel = LoginViewModel(DATABASE_INSTANCE.userDao)
 
     val isAuthenticated by loginViewModel.isAuthenticated.observeAsState()
 

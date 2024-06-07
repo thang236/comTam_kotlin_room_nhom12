@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "users")
-    data class User(
+    data class UserModel(
     var userName: String,
     var password: String,
     var email: String,
