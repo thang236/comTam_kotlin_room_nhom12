@@ -54,6 +54,7 @@ import com.example.comtam_kotlin_room.utils.Route
 fun LoginScreen(navController: NavHostController) {
 
     val loginViewModel = LoginViewModel(DATABASE_INSTANCE.userDao)
+    loginViewModel.insertSampleAdminIfNeeded()
 
     val isAuthenticated by loginViewModel.isAuthenticated.observeAsState()
 

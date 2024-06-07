@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.comtam_kotlin_room.data.DAO.UserDAO
-import com.example.comtam_kotlin_room.data.entity.UserModel
+import com.example.comtam_kotlin_room.data.entity.User
 import kotlinx.coroutines.launch
 
 class LoginViewModel(private val dao: UserDAO) : ViewModel() {
@@ -19,32 +19,35 @@ class LoginViewModel(private val dao: UserDAO) : ViewModel() {
     private val _isShowPassword = MutableLiveData<Boolean>()
     val isShowPassword: LiveData<Boolean> = _isShowPassword
 
-    private fun insertSampleAdminIfNeeded () {
+    fun insertSampleAdminIfNeeded () {
 
         viewModelScope.launch {
-            var users : List<UserModel> = listOf()
+            var users : List<User> = listOf()
             dao.getAll().collect{
                 users = it
-            }
-            if (users.isEmpty()) {
-                dao.insertUser(UserModel(userName = "admin1", password = "123", "admin1@gmail.com"))
-                dao.insertUser(UserModel(userName = "admin2", password = "456", "admin2@gmail.com"))
+
+                if (users.isEmpty()) {
+                    dao.insertUser(User(userName = "admin1", password = "123", "admin1@gmail.com"))
+                    dao.insertUser(User(userName = "admin2", password = "456", "admin2@gmail.com"))
+                }
             }
         }
-
     }
 
-    fun login(username: String, password: String) {
 
-        insertSampleAdminIfNeeded()
+
+    fun login(username: String, password: String) {
 
         viewModelScope.launch {
 
             val user = dao.getUserByUsernamePass(username, password)
-            if (user != null)
-                _isAuthenticated.value = true
-            else
-                _isAuthenticated.value = false
+            user.collect{
+                if (it != null) {
+                    _isAuthenticated.value = true
+                } else {
+                    _isAuthenticated.value = false
+                }
+            }
         }
 //        if (username.equals("admin") && password.equals("123")) {
 //            _isAuthenticated.value = true

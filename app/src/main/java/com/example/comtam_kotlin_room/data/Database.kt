@@ -5,11 +5,11 @@ import androidx.room.RoomDatabase
 import com.example.comtam_kotlin_room.data.DAO.CategoryDao
 import com.example.comtam_kotlin_room.data.DAO.UserDAO
 import com.example.comtam_kotlin_room.data.entity.Category
-import com.example.comtam_kotlin_room.data.entity.UserModel
+import com.example.comtam_kotlin_room.data.entity.User
 
 @Database(
-    entities = [Category::class, UserModel::class],
-    version = 1
+    entities = [Category::class, User::class],
+    version = 2
 )
 abstract class Database: RoomDatabase(){
     abstract val categoryDao: CategoryDao

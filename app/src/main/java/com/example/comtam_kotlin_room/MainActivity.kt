@@ -33,11 +33,13 @@ import com.example.comtam_kotlin_room.utils.Route
 
 lateinit var DATABASE_INSTANCE : Database
 
+val DB_NAME = "comtam3.db"
+
 class MainActivity : ComponentActivity() {
     val database by lazy {
         Room.databaseBuilder(
             applicationContext,
-            Database::class.java,"comtam.db"
+            Database::class.java, DB_NAME
         ).build()
     }
 
