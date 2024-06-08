@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -81,7 +83,7 @@ fun LoginScreen(navController: NavHostController) {
         modifier = Modifier
             .background(Color(0xFF252121))
             .fillMaxSize()
-            .padding(top = 70.dp),
+            .padding(top = 50.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -91,8 +93,8 @@ fun LoginScreen(navController: NavHostController) {
             contentScale = ContentScale.Fit,
             modifier = Modifier
                 .padding(horizontal = 20.dp)
-                .width(250.dp)
-                .height(250.dp)
+                .width(230.dp)
+                .height(230.dp)
         )
         Spacer(modifier = Modifier.height(20.dp))
         Text(
@@ -177,16 +179,31 @@ fun LoginScreen(navController: NavHostController) {
                     ),
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(26.dp))
             Button(
-                onClick = { loginViewModel.login(username, password) },
-                modifier = Modifier.height(48.dp)
+                onClick = {
+                    loginViewModel.login(username, password)
+                },
             ) {
                 Text(
                     text = "Log In",
                     color = Color(0XFFFFFFFF),
                     fontSize = 20.sp,
                 )
+            }
+
+            Spacer(modifier = Modifier.height(56.dp))
+            Row{
+                Text(text = "Already have account?",
+                    modifier = Modifier.align(Alignment.CenterVertically),
+                    color = Color(0xff808080)
+                )
+                TextButton(onClick = {navController.navigate(Route.Register.screen)},
+                ) {
+                    Text(text = "Register", color = Color(0xffFFFFFF)
+                        , fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
     }

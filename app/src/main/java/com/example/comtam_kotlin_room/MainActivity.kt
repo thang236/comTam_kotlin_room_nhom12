@@ -16,7 +16,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
-import androidx.room.RoomDatabase
 import com.example.comtam_kotlin_room.data.Database
 import com.example.comtam_kotlin_room.ui.screen.BottomNavigation
 import com.example.comtam_kotlin_room.ui.screen.category.CategoryScreen
@@ -24,8 +23,8 @@ import com.example.comtam_kotlin_room.ui.screen.category.CategoryViewModel
 import com.example.comtam_kotlin_room.ui.screen.dish.AddDishScreen
 import com.example.comtam_kotlin_room.ui.screen.dish.ManagerDishScreen
 import com.example.comtam_kotlin_room.ui.screen.dish.UpdateDishScreen
-import com.example.comtam_kotlin_room.ui.screen.home.HomeScreen
 import com.example.comtam_kotlin_room.ui.screen.login.LoginScreen
+import com.example.comtam_kotlin_room.ui.screen.register.Register
 import com.example.comtam_kotlin_room.ui.screen.welcome.WelcomeScreen
 import com.example.comtam_kotlin_room.ui.theme.ComTam_kotlin_roomTheme
 import com.example.comtam_kotlin_room.utils.Route
@@ -76,6 +75,9 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(Route.LOGIN.screen){
                         LoginScreen(navController)
+                    }
+                    composable(Route.Register.screen){
+                        Register(navController)
                     }
                     composable(Route.ManegerDish.screen){ ManagerDishScreen(navController) }
                     composable(Route.AddDish.screen){ AddDishScreen(navController) }
