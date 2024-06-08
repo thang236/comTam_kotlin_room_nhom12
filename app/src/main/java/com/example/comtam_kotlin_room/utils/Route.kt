@@ -17,6 +17,12 @@ sealed class Route(val screen: String) {
     data object  CategoryScreen : Route ("CategoryScreen")
     data object AddCategory : Route("AddCategory")
 
+    data object NavigationUser : Route("NavigationUser")
+
+
+
+
+
 
 
 

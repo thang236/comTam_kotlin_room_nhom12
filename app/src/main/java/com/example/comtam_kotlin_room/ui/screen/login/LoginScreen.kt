@@ -1,5 +1,6 @@
 package com.example.comtam_kotlin_room.ui.screen.login
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -50,21 +51,34 @@ import androidx.navigation.compose.rememberNavController
 import com.example.comtam_kotlin_room.DATABASE_INSTANCE
 import com.example.comtam_kotlin_room.R
 import com.example.comtam_kotlin_room.utils.Route
+import kotlin.math.log
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(navController: NavHostController) {
 
+
     val loginViewModel = LoginViewModel(DATABASE_INSTANCE.userDao)
     loginViewModel.insertSampleAdminIfNeeded()
 
     val isAuthenticated by loginViewModel.isAuthenticated.observeAsState()
+    val role by loginViewModel.isRole.observeAsState()
+
+
 
     val context = LocalContext.current
 
     LaunchedEffect(key1 = isAuthenticated) { when (isAuthenticated) {
-        true -> { navController.navigate(Route.Home.screen) {
-            popUpTo(Route.LOGIN.screen) { inclusive = true } }
+        true -> {
+            Log.d("zzzzzzz", "login: $role")
+            if (role == 0){
+                navController.navigate(Route.Home.screen) {
+                    popUpTo(Route.LOGIN.screen) { inclusive = true } }
+            }else{
+                navController.navigate(Route.NavigationUser.screen) {
+                    popUpTo(Route.LOGIN.screen) { inclusive = true } }
+            }
+
         }
         false -> {
             Toast.makeText(context, "Invalid username or password.", Toast.LENGTH_SHORT).show()

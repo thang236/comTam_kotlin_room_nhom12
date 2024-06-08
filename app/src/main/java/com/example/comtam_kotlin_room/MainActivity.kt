@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.example.comtam_kotlin_room.data.Database
 import com.example.comtam_kotlin_room.ui.screen.BottomNavigation
+import com.example.comtam_kotlin_room.ui.screen.NavigationUser
 import com.example.comtam_kotlin_room.ui.screen.category.CategoryScreen
 import com.example.comtam_kotlin_room.ui.screen.category.CategoryViewModel
 import com.example.comtam_kotlin_room.ui.screen.dish.AddDishScreen
@@ -89,6 +90,11 @@ class MainActivity : ComponentActivity() {
                             navController = navController
                         )
                     }
+
+
+                    //user
+                    composable(Route.NavigationUser.screen){ NavigationUser() }
+
 
 
                 }
