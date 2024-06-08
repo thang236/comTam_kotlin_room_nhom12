@@ -5,6 +5,7 @@ sealed class Route(val screen: String) {
     data object DetailCart : Route("detail")
     data object WELCOME : Route("Welcome")
     data object LOGIN : Route("Login")
+    data object Register : Route("Register")
     data object THONGKE : Route("THONGKE")
     data object History : Route("history")
     data object BieuDo : Route("bieudo")
@@ -15,6 +16,12 @@ sealed class Route(val screen: String) {
     data object UpdateDish : Route("UpdateDish")
     data object  CategoryScreen : Route ("CategoryScreen")
     data object AddCategory : Route("AddCategory")
+
+    data object NavigationUser : Route("NavigationUser")
+
+
+
+
 
 
 

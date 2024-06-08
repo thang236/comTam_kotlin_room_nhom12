@@ -21,6 +21,8 @@ interface UserDAO {
     @Query("Select * From users Where userName = :userName and password = :pass")
     fun getUserByUsernamePass(userName: String, pass: String) : Flow<User>
 
+    @Query("SELECT * FROM users WHERE userName = :userName LIMIT 1")
+    fun getUserByUsername(userName: String): User?
     @Upsert
     suspend fun updateUpdate(user: User)
 

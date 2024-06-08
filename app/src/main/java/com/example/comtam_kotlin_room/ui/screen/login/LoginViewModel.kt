@@ -1,5 +1,6 @@
 package com.example.comtam_kotlin_room.ui.screen.login
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,16 +20,19 @@ class LoginViewModel(private val dao: UserDAO) : ViewModel() {
     private val _isShowPassword = MutableLiveData<Boolean>()
     val isShowPassword: LiveData<Boolean> = _isShowPassword
 
+
+    private val _isRole = MutableLiveData<Int>()
+    val isRole: LiveData<Int> = _isRole
+
     fun insertSampleAdminIfNeeded () {
 
         viewModelScope.launch {
             var users : List<User> = listOf()
             dao.getAll().collect{
                 users = it
-
                 if (users.isEmpty()) {
-                    dao.insertUser(User(userName = "admin1", password = "123", "admin1@gmail.com"))
-                    dao.insertUser(User(userName = "admin2", password = "456", "admin2@gmail.com"))
+                    dao.insertUser(User(userName = "admin1", password = "123", "admin1@gmail.com",0))
+                    dao.insertUser(User(userName = "admin2", password = "456", "admin2@gmail.com",0))
                 }
             }
         }
@@ -44,6 +48,8 @@ class LoginViewModel(private val dao: UserDAO) : ViewModel() {
             user.collect{
                 if (it != null) {
                     _isAuthenticated.value = true
+                    _isRole.value = it.role
+
                 } else {
                     _isAuthenticated.value = false
                 }

@@ -1,10 +1,12 @@
 package com.example.comtam_kotlin_room.ui.screen.login
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -48,21 +51,34 @@ import androidx.navigation.compose.rememberNavController
 import com.example.comtam_kotlin_room.DATABASE_INSTANCE
 import com.example.comtam_kotlin_room.R
 import com.example.comtam_kotlin_room.utils.Route
+import kotlin.math.log
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(navController: NavHostController) {
 
+
     val loginViewModel = LoginViewModel(DATABASE_INSTANCE.userDao)
     loginViewModel.insertSampleAdminIfNeeded()
 
     val isAuthenticated by loginViewModel.isAuthenticated.observeAsState()
+    val role by loginViewModel.isRole.observeAsState()
+
+
 
     val context = LocalContext.current
 
     LaunchedEffect(key1 = isAuthenticated) { when (isAuthenticated) {
-        true -> { navController.navigate(Route.Home.screen) {
-            popUpTo(Route.LOGIN.screen) { inclusive = true } }
+        true -> {
+            Log.d("zzzzzzz", "login: $role")
+            if (role == 0){
+                navController.navigate(Route.Home.screen) {
+                    popUpTo(Route.LOGIN.screen) { inclusive = true } }
+            }else{
+                navController.navigate(Route.NavigationUser.screen) {
+                    popUpTo(Route.LOGIN.screen) { inclusive = true } }
+            }
+
         }
         false -> {
             Toast.makeText(context, "Invalid username or password.", Toast.LENGTH_SHORT).show()
@@ -81,7 +97,7 @@ fun LoginScreen(navController: NavHostController) {
         modifier = Modifier
             .background(Color(0xFF252121))
             .fillMaxSize()
-            .padding(top = 70.dp),
+            .padding(top = 50.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -91,8 +107,8 @@ fun LoginScreen(navController: NavHostController) {
             contentScale = ContentScale.Fit,
             modifier = Modifier
                 .padding(horizontal = 20.dp)
-                .width(250.dp)
-                .height(250.dp)
+                .width(230.dp)
+                .height(230.dp)
         )
         Spacer(modifier = Modifier.height(20.dp))
         Text(
@@ -133,7 +149,7 @@ fun LoginScreen(navController: NavHostController) {
                     .fillMaxWidth()
                     .background(
                         Color(0XFFD9D9D9),
-                        RoundedCornerShape(16.dp)
+                        RoundedCornerShape(6.dp)
                     ),
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -173,20 +189,38 @@ fun LoginScreen(navController: NavHostController) {
                     .fillMaxWidth()
                     .background(
                         Color(0XFFD9D9D9),
-                        RoundedCornerShape(16.dp)
+                        RoundedCornerShape(6.dp)
                     ),
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = { loginViewModel.login(username, password) },
-                modifier = Modifier.height(48.dp)
+            Spacer(modifier = Modifier.height(26.dp))
+            TextButton(
+                onClick = {
+                    loginViewModel.login(username, password)
+                },
+                modifier = Modifier.background(
+                    color = Color(0XFFFE724C),
+                    RoundedCornerShape(16.dp))
             ) {
                 Text(
                     text = "Log In",
                     color = Color(0XFFFFFFFF),
                     fontSize = 20.sp,
                 )
+            }
+
+            Spacer(modifier = Modifier.height(56.dp))
+            Row{
+                Text(text = "Already have account?",
+                    modifier = Modifier.align(Alignment.CenterVertically),
+                    color = Color(0xff808080)
+                )
+                TextButton(onClick = {navController.navigate(Route.Register.screen)},
+                ) {
+                    Text(text = "Register", color = Color(0xffFFFFFF)
+                        , fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
     }

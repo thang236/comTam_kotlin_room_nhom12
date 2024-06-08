@@ -1,5 +1,7 @@
-package com.example.comtam_kotlin_room.ui.screen.login
+package com.example.comtam_kotlin_room.ui.screen.register
 
+import android.util.Patterns
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -10,10 +12,12 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -25,24 +29,51 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.comtam_kotlin_room.DATABASE_INSTANCE
 import com.example.comtam_kotlin_room.R
+import com.example.comtam_kotlin_room.data.entity.User
+import com.example.comtam_kotlin_room.ui.screen.login.LoginViewModel
 import com.example.comtam_kotlin_room.utils.Route
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUp(navController: NavHostController) {
-    var username by remember { mutableStateOf("") }
+fun Register(navController: NavHostController) {
+    val registerViewModel = RegisterViewModel(DATABASE_INSTANCE.userDao)
+    val isAuthenticated by registerViewModel.isAuthenticated.observeAsState()
+
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = isAuthenticated) { when (isAuthenticated) {
+        true -> { navController.navigate(Route.LOGIN.screen) {
+            popUpTo(Route.Register.screen) { inclusive = true } }
+        }
+        false -> {
+            Toast.makeText(context, "Invalid username or password.", Toast.LENGTH_SHORT).show()
+            registerViewModel.resetAuthenticationState() }
+        null -> {} }
+    }
+    val usernameState by registerViewModel.username.observeAsState("")
+    val isShowPasswordState by registerViewModel.isShowPassword.observeAsState(false)
+    val isRePasswordState by registerViewModel.isRepassVisible.observeAsState(false)
+
+    var username by remember { mutableStateOf(usernameState) }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var repassword by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
-    var repasswordVisible by remember { mutableStateOf(false) }
+    var passwordVisible by remember { mutableStateOf(isShowPasswordState) }
+    var repasswordVisible by remember { mutableStateOf(isRePasswordState) }
+
+    var usernameError by remember { mutableStateOf(false) }
+    var emailError by remember { mutableStateOf(false) }
+    var passwordError by remember { mutableStateOf(false) }
+    var repasswordError by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
             .background(Color(0xFF252121))
             .fillMaxSize()
-            .padding(top = 70.dp),
+            .padding(top = 20.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -52,8 +83,8 @@ fun SignUp(navController: NavHostController) {
             contentScale = ContentScale.Fit,
             modifier = Modifier
                 .padding(horizontal = 20.dp)
-                .width(250.dp)
-                .height(250.dp)
+                .width(220.dp)
+                .height(220.dp)
         )
         Spacer(modifier = Modifier.height(20.dp))
         Text(
@@ -82,7 +113,11 @@ fun SignUp(navController: NavHostController) {
             )
             OutlinedTextField(
                 value = username,
-                onValueChange = { username = it },
+                onValueChange = {
+                    username = it
+                    usernameError = username.isBlank()
+                },
+                isError = usernameError,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Next
                 ),
@@ -94,9 +129,17 @@ fun SignUp(navController: NavHostController) {
                     .fillMaxWidth()
                     .background(
                         Color(0XFFD9D9D9),
-                        RoundedCornerShape(16.dp)
+                        RoundedCornerShape(6.dp)
                     ),
             )
+            if (usernameError) {
+                Text(
+                    text = "Username cannot be empty",
+                    color = Color(0XFFff770b),
+                    fontSize = 12.sp,
+                    modifier = Modifier.align(Alignment.Start)
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Email",
@@ -110,7 +153,11 @@ fun SignUp(navController: NavHostController) {
             )
             OutlinedTextField(
                 value = email,
-                onValueChange = { email = it },
+                onValueChange = {
+                    email = it
+                    emailError = !Patterns.EMAIL_ADDRESS.matcher(email).matches()
+                },
+                isError = emailError,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Next
                 ),
@@ -122,9 +169,17 @@ fun SignUp(navController: NavHostController) {
                     .fillMaxWidth()
                     .background(
                         Color(0XFFD9D9D9),
-                        RoundedCornerShape(16.dp)
+                        RoundedCornerShape(6.dp)
                     ),
             )
+            if (emailError) {
+                Text(
+                    text = "Invalid email address",
+                    color = Color(0XFFff770b),
+                    fontSize = 12.sp,
+                    modifier = Modifier.align(Alignment.Start)
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Password",
@@ -138,7 +193,11 @@ fun SignUp(navController: NavHostController) {
             )
             OutlinedTextField(
                 value = password,
-                onValueChange = { password = it },
+                onValueChange = {
+                    password = it
+                    passwordError = password.isBlank()
+                },
+                isError = passwordError,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Next
                 ),
@@ -162,9 +221,17 @@ fun SignUp(navController: NavHostController) {
                     .fillMaxWidth()
                     .background(
                         Color(0XFFD9D9D9),
-                        RoundedCornerShape(16.dp)
+                        RoundedCornerShape(6.dp)
                     ),
             )
+            if (passwordError) {
+                Text(
+                    text = "Password cannot be empty",
+                    color =  Color(0XFFff770b),
+                    fontSize = 12.sp,
+                    modifier = Modifier.align(Alignment.Start)
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Re-enter Password",
@@ -178,7 +245,11 @@ fun SignUp(navController: NavHostController) {
             )
             OutlinedTextField(
                 value = repassword,
-                onValueChange = { repassword = it },
+                onValueChange = {
+                    repassword = it
+                    repasswordError = repassword != password
+                },
+                isError = repasswordError,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Done
                 ),
@@ -202,15 +273,37 @@ fun SignUp(navController: NavHostController) {
                     .fillMaxWidth()
                     .background(
                         Color(0XFFD9D9D9),
-                        RoundedCornerShape(16.dp)
+                        RoundedCornerShape(6.dp)
                     ),
             )
+            if (repasswordError) {
+                Text(
+                    text = "Passwords do not match",
+                    color = Color(0XFFff770b),
+                    fontSize = 12.sp,
+                    modifier = Modifier.align(Alignment.Start)
+                )
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = {},
-                modifier = Modifier
-                    .height(48.dp)
+            TextButton(
+                onClick = {
+                    usernameError = username.isBlank()
+                    emailError = !Patterns.EMAIL_ADDRESS.matcher(email).matches()
+                    passwordError = password.isBlank()
+                    repasswordError = repassword != password
+
+                    if (!usernameError && !emailError && !passwordError && !repasswordError) {
+                        registerViewModel.register(user = User(username,password,email,1))
+                        Toast.makeText(context, "Sign Up Success", Toast.LENGTH_LONG).show()
+                        navController.navigate(Route.LOGIN.screen)
+                    } else {
+                        errorMessage = "Please correct the errors above"
+                    }
+                },
+                modifier = Modifier.background(
+                    color = Color(0XFFFE724C),
+                    RoundedCornerShape(16.dp))
             ) {
                 Text(
                     text = "Sign Up",
@@ -218,15 +311,19 @@ fun SignUp(navController: NavHostController) {
                     fontSize = 20.sp,
                 )
             }
+            if (errorMessage.isNotEmpty()) {
+                Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+            }
 
+            Spacer(modifier = Modifier.height(26.dp))
             Row() {
                 Text(text = "Already have account?",
                     modifier = Modifier.align(Alignment.CenterVertically),
                     color = Color(0xff808080)
                 )
-                TextButton(onClick = {navController.navigate(Route.Home.screen) },
+                TextButton(onClick = {navController.navigate(Route.LOGIN.screen) },
                 ) {
-                    Text(text = " SIGN IN", color = Color(0xff303030)
+                    Text(text = "Log In", color = Color(0xffFFFFFF)
                         , fontWeight = FontWeight.Bold
                     )
                 }
@@ -238,6 +335,5 @@ fun SignUp(navController: NavHostController) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewSignUp() {
-    SignUp(rememberNavController())
+    Register(rememberNavController())
 }
-
