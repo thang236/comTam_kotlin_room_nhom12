@@ -27,8 +27,8 @@ class LoginViewModel(private val dao: UserDAO) : ViewModel() {
                 users = it
 
                 if (users.isEmpty()) {
-                    dao.insertUser(User(userName = "admin1", password = "123", "admin1@gmail.com"))
-                    dao.insertUser(User(userName = "admin2", password = "456", "admin2@gmail.com"))
+                    dao.insertUser(User(userName = "admin1", password = "123", "admin1@gmail.com",0))
+                    dao.insertUser(User(userName = "admin2", password = "456", "admin2@gmail.com",0))
                 }
             }
         }

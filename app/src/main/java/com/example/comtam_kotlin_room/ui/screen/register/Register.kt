@@ -129,13 +129,13 @@ fun Register(navController: NavHostController) {
                     .fillMaxWidth()
                     .background(
                         Color(0XFFD9D9D9),
-                        RoundedCornerShape(16.dp)
+                        RoundedCornerShape(6.dp)
                     ),
             )
             if (usernameError) {
                 Text(
                     text = "Username cannot be empty",
-                    color = Color.Red,
+                    color = Color(0XFFff770b),
                     fontSize = 12.sp,
                     modifier = Modifier.align(Alignment.Start)
                 )
@@ -169,13 +169,13 @@ fun Register(navController: NavHostController) {
                     .fillMaxWidth()
                     .background(
                         Color(0XFFD9D9D9),
-                        RoundedCornerShape(16.dp)
+                        RoundedCornerShape(6.dp)
                     ),
             )
             if (emailError) {
                 Text(
                     text = "Invalid email address",
-                    color = Color.Red,
+                    color = Color(0XFFff770b),
                     fontSize = 12.sp,
                     modifier = Modifier.align(Alignment.Start)
                 )
@@ -221,13 +221,13 @@ fun Register(navController: NavHostController) {
                     .fillMaxWidth()
                     .background(
                         Color(0XFFD9D9D9),
-                        RoundedCornerShape(16.dp)
+                        RoundedCornerShape(6.dp)
                     ),
             )
             if (passwordError) {
                 Text(
                     text = "Password cannot be empty",
-                    color = Color.Red,
+                    color =  Color(0XFFff770b),
                     fontSize = 12.sp,
                     modifier = Modifier.align(Alignment.Start)
                 )
@@ -273,20 +273,20 @@ fun Register(navController: NavHostController) {
                     .fillMaxWidth()
                     .background(
                         Color(0XFFD9D9D9),
-                        RoundedCornerShape(16.dp)
+                        RoundedCornerShape(6.dp)
                     ),
             )
             if (repasswordError) {
                 Text(
                     text = "Passwords do not match",
-                    color = Color.Red,
+                    color = Color(0XFFff770b),
                     fontSize = 12.sp,
                     modifier = Modifier.align(Alignment.Start)
                 )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-            Button(
+            TextButton(
                 onClick = {
                     usernameError = username.isBlank()
                     emailError = !Patterns.EMAIL_ADDRESS.matcher(email).matches()
@@ -294,13 +294,16 @@ fun Register(navController: NavHostController) {
                     repasswordError = repassword != password
 
                     if (!usernameError && !emailError && !passwordError && !repasswordError) {
-                        registerViewModel.register(user = User(username,password,email))
+                        registerViewModel.register(user = User(username,password,email,1))
+                        Toast.makeText(context, "Sign Up Success", Toast.LENGTH_LONG).show()
+                        navController.navigate(Route.LOGIN.screen)
                     } else {
                         errorMessage = "Please correct the errors above"
                     }
                 },
-                modifier = Modifier
-                    .height(48.dp)
+                modifier = Modifier.background(
+                    color = Color(0XFFFE724C),
+                    RoundedCornerShape(16.dp))
             ) {
                 Text(
                     text = "Sign Up",
@@ -309,15 +312,10 @@ fun Register(navController: NavHostController) {
                 )
             }
             if (errorMessage.isNotEmpty()) {
-                Text(
-                    text = errorMessage,
-                    color = Color.Red,
-                    fontSize = 14.sp,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
+                Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(26.dp))
             Row() {
                 Text(text = "Already have account?",
                     modifier = Modifier.align(Alignment.CenterVertically),

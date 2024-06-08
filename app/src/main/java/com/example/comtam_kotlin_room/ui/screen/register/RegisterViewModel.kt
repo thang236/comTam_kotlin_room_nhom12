@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.comtam_kotlin_room.data.DAO.UserDAO
 import com.example.comtam_kotlin_room.data.entity.User
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RegisterViewModel(private val dao: UserDAO) : ViewModel() {
 
@@ -22,13 +24,24 @@ class RegisterViewModel(private val dao: UserDAO) : ViewModel() {
     private val _isShowRePassword = MutableLiveData<Boolean>()
     val isRepassVisible: LiveData<Boolean> = _isShowRePassword
 
-    fun register(user: User) {
-        viewModelScope.launch {
-            dao.insertUser(user)
+    suspend fun checkUsernameExists(username: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            dao.getUserByUsername(username) != null
         }
     }
+
+    fun register(user: User) {
+        viewModelScope.launch {
+            if (checkUsernameExists(user.userName)) {
+                _isAuthenticated.value = false
+            } else {
+                dao.insertUser(user)
+                _isAuthenticated.value = true
+            }
+        }
+    }
+
     fun resetAuthenticationState() {
         _isAuthenticated.value = null
     }
-
 }

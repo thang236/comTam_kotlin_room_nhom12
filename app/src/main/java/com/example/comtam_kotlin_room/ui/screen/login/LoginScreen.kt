@@ -135,7 +135,7 @@ fun LoginScreen(navController: NavHostController) {
                     .fillMaxWidth()
                     .background(
                         Color(0XFFD9D9D9),
-                        RoundedCornerShape(16.dp)
+                        RoundedCornerShape(6.dp)
                     ),
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -175,15 +175,18 @@ fun LoginScreen(navController: NavHostController) {
                     .fillMaxWidth()
                     .background(
                         Color(0XFFD9D9D9),
-                        RoundedCornerShape(16.dp)
+                        RoundedCornerShape(6.dp)
                     ),
             )
 
             Spacer(modifier = Modifier.height(26.dp))
-            Button(
+            TextButton(
                 onClick = {
                     loginViewModel.login(username, password)
                 },
+                modifier = Modifier.background(
+                    color = Color(0XFFFE724C),
+                    RoundedCornerShape(16.dp))
             ) {
                 Text(
                     text = "Log In",
