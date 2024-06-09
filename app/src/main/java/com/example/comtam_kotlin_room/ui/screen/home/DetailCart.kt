@@ -54,6 +54,7 @@ data class ItemCart( val id:String,val name:String,val price:String,val quantity
 @Composable
 fun DetailsCart(navHostController: NavHostController,oderCartViewModel: OderCartViewModel= viewModel()) {
 
+   Log.d("zzzzzzzzzzzzz", "DetailsCart: ${oderCartViewModel.idOrder.value}")
 
    val mainItems = listOf(
       ItemCart("1", "Sườn Bì", "56k", "02"),
@@ -106,7 +107,7 @@ fun DetailsCart(navHostController: NavHostController,oderCartViewModel: OderCart
          ) {
             Button(
                onClick = {
-                  oderCartViewModel.updateAllOrdersStatus(orderId = ,newStatus=1 )
+                  oderCartViewModel.updateAllOrdersStatus(orderId =oderCartViewModel.idOrder.value ,newStatus=1 )
                          navHostController.navigate(Route.Home.screen)},
                modifier = Modifier
                   .padding(start = 25.dp)

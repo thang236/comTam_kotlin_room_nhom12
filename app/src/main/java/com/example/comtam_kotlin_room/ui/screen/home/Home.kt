@@ -26,7 +26,9 @@ import com.example.comtam_kotlin_room.utils.Route
 data class ListItem(val title: String, val description: String, val price:String)
 
 @Composable
-fun HomeScreen(navigationController: NavHostController,orderCartViewModel: OderCartViewModel) {
+fun HomeScreen(navigationController: NavHostController
+               ,orderCartViewModel: OderCartViewModel
+) {
     val allOrders by orderCartViewModel.allOders.collectAsState(initial = emptyList())
 
     
@@ -72,7 +74,7 @@ fun HomeScreen(navigationController: NavHostController,orderCartViewModel: OderC
           )
           {
               items(allOrders) { item ->
-                  ListItemView(item = item, navigationController = navigationController)
+                  ListItemView(item = item, navigationController = navigationController, orderCartViewModel = orderCartViewModel)
               }
           }
       }
@@ -81,7 +83,9 @@ fun HomeScreen(navigationController: NavHostController,orderCartViewModel: OderC
 }
 
 @Composable
-fun ListItemView(item: OderCart,navigationController: NavHostController) {
+fun ListItemView(item: OderCart,
+                 navigationController: NavHostController,
+                 orderCartViewModel: OderCartViewModel) {
 
     val textColor = when (item.status) {
         0 -> Color.Yellow // Màu chữ cho trạng thái "Chưa xác nhận"
@@ -133,6 +137,7 @@ fun ListItemView(item: OderCart,navigationController: NavHostController) {
                     modifier = Modifier
                         .padding(start = 20.dp)
                         .clickable {
+                            orderCartViewModel.idOrder.value = item.idCart
                             navigationController.navigate(Route.DetailCart.screen)
                         }
                 )

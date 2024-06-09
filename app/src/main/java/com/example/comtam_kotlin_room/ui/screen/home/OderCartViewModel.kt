@@ -2,6 +2,7 @@ package com.example.comtam_kotlin_room.ui.screen.home
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -21,6 +22,9 @@ class OderCartViewModel(
     val allOders:Flow<List<OderCart>> = oderCartDao.getAllOderCart()
     private val _updateResult = mutableStateOf<Result<Unit>?>(null)
     val updateResult: State<Result<Unit>?> = _updateResult
+
+    var idOrder  = mutableStateOf<Int>(-1)
+
 
     // Hàm cập nhật trạng thái của tất cả các đơn hàng
     fun updateAllOrdersStatus(orderId: Int, newStatus: Int) {
