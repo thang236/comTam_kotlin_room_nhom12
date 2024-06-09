@@ -6,7 +6,8 @@ import androidx.room.PrimaryKey
 data class Dish(
     var nameDish: String,
     var price: Double,
-
+    var idCategory: Int,
+    var image: ByteArray,
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 )

@@ -18,7 +18,8 @@ import kotlinx.coroutines.launch
 class DishViewModel(
     private  val dao: DishDao
 ): ViewModel() {
-    var dish by mutableStateOf(Dish("",.0,-1))
+     lateinit var arrayByte: ByteArray
+     var dish by mutableStateOf("")
     private val dishs = dao.getAll().stateIn(viewModelScope, SharingStarted.WhileSubscribed(),
         emptyList()
     )
@@ -38,8 +39,10 @@ class DishViewModel(
             }
             is DishEvent.SaveDish ->{
                 val dish = Dish(
-                    nameDish = state.value.nameDish.value,
-                    price = state.value.price.value
+                    nameDish = event.nameDish,
+                    price = event.price,
+                    idCategory = event.idCategory,
+                    image = event.image
                 )
                 viewModelScope.launch {
                     dao.upsertDish(dish)

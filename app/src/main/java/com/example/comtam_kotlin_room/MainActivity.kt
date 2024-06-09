@@ -90,7 +90,8 @@ class MainActivity : ComponentActivity() {
                     composable(Route.AddDish.screen){ AddDishScreen(
                         state = Dishstate,
                         onEvent = viewModelDish::onEvent,
-                        navigationController = navController) }
+                        navigationController = navController,
+                        categoryViewModel = viewModelCategory) }
                     composable(Route.UpdateDish.screen){ UpdateDishScreen(
                         state = Dishstate,
                         onEvent = viewModelDish::onEvent,

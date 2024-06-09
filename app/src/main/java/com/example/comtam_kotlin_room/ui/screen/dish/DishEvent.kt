@@ -6,7 +6,9 @@ import com.example.comtam_kotlin_room.data.entity.Dish
 sealed interface DishEvent {
     data class SaveDish(
         val nameDish: String,
-        val price: Double
+        val price: Double,
+        var idCategory: Int,
+        var image: ByteArray,
     ): DishEvent
 
     data class DeleteDish(

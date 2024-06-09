@@ -1,6 +1,11 @@
 package com.example.comtam_kotlin_room.ui.screen.dish
 
 import android.annotation.SuppressLint
+import android.content.ContentResolver
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,24 +17,27 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.example.comtam_kotlin_room.R
+import com.example.comtam_kotlin_room.ui.screen.category.CategoryViewModel
 import com.example.comtam_kotlin_room.ui.theme.ComTam_kotlin_roomTheme
 import com.example.comtam_kotlin_room.utils.Route
+import java.io.IOException
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -37,7 +45,8 @@ import com.example.comtam_kotlin_room.utils.Route
 fun AddDishScreen(
     state: DishState,
     navigationController: NavHostController,
-    onEvent: (DishEvent) -> Unit
+    onEvent: (DishEvent) -> Unit,
+    categoryViewModel: CategoryViewModel
 ) {
     Scaffold(
         topBar = {
@@ -77,25 +86,60 @@ fun AddDishScreen(
         AddDish(
             state = state,
             onEvent = onEvent,
-            navigationController = navigationController
+            navigationController = navigationController,
+            categoryViewModel = categoryViewModel
         )
     }
 }
 
 
-@SuppressLint("DefaultLocale")
+@SuppressLint("StateFlowValueCalledInComposition", "UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddDish(
     state: DishState,
     navigationController: NavHostController,
-    onEvent: (DishEvent) -> Unit
+    onEvent: (DishEvent) -> Unit,
+    categoryViewModel: CategoryViewModel
+
 ) {
     var selectedMainCourse by remember { mutableStateOf("Món chính") }
-    var selectedDishType by remember { mutableStateOf("Sườn / Sườn mỡ") }
+    var selectedDishType by remember { mutableStateOf("chọn loại món") }
     val scrollState = rememberScrollState()
+
+
+
     val mainCourseOptions = listOf("Món chính", "Món phụ", "Topping")
-    val dishTypeOptions = listOf("Sườn / Sườn mỡ", "Thịt", "Rau")
+
+
+
+    val dishTypeOptions = mutableListOf<String>()
+    for (i in 0 until  categoryViewModel.state.value.categorys.size){
+        dishTypeOptions.add(categoryViewModel.state.value.categorys[i].nameCategory)
+
+    }
+
+
+    val context = LocalContext.current
+    var imageByte by remember { mutableStateOf<ByteArray?>(null) }
+
+
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+
+    val getContent = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        uri?.let {
+            imageUri = it
+            imageByte = uriToByteArray(context.contentResolver, it)
+            Log.d("zzzzzzzz", "AddDish: $imageByte")
+
+        }
+    }
+
+
+
+
+
+
 
     Column(
         modifier = Modifier
@@ -106,13 +150,21 @@ fun AddDish(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        AsyncImage(
+            model = imageUri , // Use a default image resource
+            contentDescription = "",
+            modifier = Modifier
+                .padding(4.dp)
+                .size(150.dp),
+            contentScale = ContentScale.Crop,
+        )
         Spacer(modifier = Modifier.height(16.dp))
 
         Box(
             modifier = Modifier
                 .size(150.dp)
                 .background(Color.Gray, shape = RoundedCornerShape(8.dp))
-                .clickable { /* Add image upload functionality */ },
+                .clickable { getContent.launch("image/*") },
             contentAlignment = Alignment.Center
         ) {
             Text(text = "Thêm hình ảnh", color = Color.White)
@@ -120,8 +172,18 @@ fun AddDish(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        var idCategory by remember { mutableIntStateOf(-1) }
+
         DropdownMenuBox(selectedMainCourse, mainCourseOptions) { selectedMainCourse = it }
-        DropdownMenuBox(selectedDishType, dishTypeOptions) { selectedDishType = it }
+        DropdownMenuBox(selectedDishType, dishTypeOptions) {
+
+            selectedDishType = it
+            for (i in 0 until categoryViewModel.state.value.categorys.size){
+                if (categoryViewModel.state.value.categorys[i].nameCategory == it){
+                        idCategory = categoryViewModel.state.value.categorys[i].id
+                }
+            }
+        }
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -165,11 +227,16 @@ fun AddDish(
 
         Button(
             onClick = {
-                onEvent(DishEvent.SaveDish(
-                    nameDish = state.nameDish.value,
-                    price = state.price.value
-                ))
-                navigationController.popBackStack()
+                if (imageByte !=null){
+                    onEvent(DishEvent.SaveDish(
+                        nameDish = state.nameDish.value,
+                        price = state.price.value,
+                        idCategory = idCategory,
+                        image = imageByte!!
+                    ))
+                    navigationController.popBackStack()
+                }
+
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -225,5 +292,16 @@ fun DropdownMenuBox(
                 )
             }
         }
+    }
+}
+
+fun uriToByteArray(contentResolver: ContentResolver, uri: Uri): ByteArray? {
+    return try {
+        val inputStream = contentResolver.openInputStream(uri)
+        val byteArray = inputStream?.readBytes()
+        byteArray
+    } catch (e: IOException) {
+        e.printStackTrace()
+        null
     }
 }
