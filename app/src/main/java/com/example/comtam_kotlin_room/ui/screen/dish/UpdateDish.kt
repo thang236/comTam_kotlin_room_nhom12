@@ -1,6 +1,7 @@
 package com.example.comtam_kotlin_room.ui.screen.dish
 
 import android.annotation.SuppressLint
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -63,6 +64,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.example.comtam_kotlin_room.R
 import com.example.comtam_kotlin_room.data.DAO.DishDao
 import com.example.comtam_kotlin_room.data.entity.Category
@@ -137,12 +139,12 @@ fun UpdateDish(
     var price by remember { mutableStateOf(dish.price) }
     val priceString = price.toString()
     val context = LocalContext.current
-    var imageByte by remember { mutableStateOf<ByteArray?>(null) }
+    var imageByte by remember { mutableStateOf<ByteArray>(dish.image) }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val getContent = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
             imageUri = it
-            imageByte = uriToByteArray(context.contentResolver, it)
+            imageByte = uriToByteArray(context.contentResolver, it)!!
             Log.d("zzzzzzzz", "AddDish: $imageByte")
         }
     }
@@ -171,14 +173,20 @@ fun UpdateDish(
                         .align(Alignment.CenterHorizontally),
                     contentAlignment = Alignment.Center
                 ) {
-                    AsyncImage(
-                        model = imageUri,
-                        contentDescription = "",
+
+                    val bitmap = BitmapFactory.decodeByteArray(
+                        imageByte,0, imageByte.size
+                    )
+
+                    Image(
+                        painter = rememberAsyncImagePainter(bitmap) ,
+                        contentDescription = null,
                         modifier = Modifier
                             .fillMaxSize()
                             .clip(RoundedCornerShape(8.dp)),
                         contentScale = ContentScale.Crop,
                     )
+
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -219,6 +227,7 @@ fun UpdateDish(
                 onClick = {
                     dish.nameDish = state.nameDish.value
                     dish.price = price
+                    dish.image = imageByte
                     onEvent(DishEvent.EditDish(dish))
                     onDismiss()
                 },

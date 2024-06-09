@@ -85,8 +85,7 @@ fun ManagerDishScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                state.nameDish.value
-                state.price.value
+
                 navigationController.navigate(Route.AddDish.screen)
             }, contentColor = Color.White, containerColor = Color(0xFFbdf1e9)) {
                 Icon(imageVector = Icons.Rounded.Add, contentDescription = "Add", tint = Color.Black)
@@ -195,6 +194,9 @@ fun MenuItemCard(
             IconButton(
                 onClick = {
                     showDialogEdit = true
+                    state.nameDish.value = state.dishs[index].nameDish
+                    state.price.value = state.dishs[index].price
+                    state.image.value = state.dishs[index].image
                 },
                 modifier = Modifier
                     .size(24.dp)

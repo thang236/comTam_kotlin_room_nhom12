@@ -14,4 +14,7 @@ data class DishState(
     val price: MutableState<Double> = mutableStateOf(0.0),
     val id: MutableState<Int> = mutableStateOf(0),
 
+    var image :  MutableState<ByteArray?> = mutableStateOf(null),
+
+
 )
