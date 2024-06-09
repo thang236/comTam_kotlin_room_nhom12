@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -40,22 +41,23 @@ import com.example.comtam_kotlin_room.R
 import com.example.comtam_kotlin_room.ui.screen_user.cart_user.CartUserScreen
 import com.example.comtam_kotlin_room.ui.screen_user.history_user.HistoryUserScreen
 import com.example.comtam_kotlin_room.ui.screen_user.home_user.HomeUserScreen
+import com.example.comtam_kotlin_room.ui.screen_user.person_user.EditPersonUser
 import com.example.comtam_kotlin_room.ui.screen_user.person_user.PersonUserScreen
 import com.example.comtam_kotlin_room.utils.Route
 
 @Composable
-fun BottomNavigationUser(){
+fun BottomNavigationUser( navController: NavHostController){
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        MyBottomAppBarUser()
+        MyBottomAppBarUser(navController)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyBottomAppBarUser( ) {
+fun MyBottomAppBarUser( navController: NavHostController) {
 
     val navigationController = rememberNavController()
     val selected = remember {
@@ -68,20 +70,29 @@ fun MyBottomAppBarUser( ) {
             Column(Modifier.fillMaxWidth()) {
                 TopAppBar(
                     title = {
-                        Row (modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically) {
-                            Image(
-                                painter = painterResource(id = R.drawable.logo),
-                                contentDescription ="",
-                                contentScale = ContentScale.Fit,
-                                modifier = Modifier.fillMaxWidth(0.12f)
-                            )
-                            Text(text = "Cum tứm đim")
+                        if (selected.value == Icons.Default.Person){
+                            Row (modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center) {
+                                Text(text = "Hồ sơ")
+                            }
+                        } else {
+                            Row (modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.logo),
+                                    contentDescription ="",
+                                    contentScale = ContentScale.Fit,
+                                    modifier = Modifier.fillMaxWidth(0.12f)
+                                )
+                                Text(text = "Cum tứm đim")
 
+                            }
                         }
+
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color(0xff252121),
+                        containerColor = if (selected.value == Icons.Default.Person) Color(0xFF000000) else Color(0xff252121),
                         titleContentColor = Color.White,
                     ),
 
@@ -252,7 +263,7 @@ fun MyBottomAppBarUser( ) {
                 HistoryUserScreen()
             }
             composable(Route.PersonUser.screen){
-                PersonUserScreen()
+                EditPersonUser()
             }
 
 

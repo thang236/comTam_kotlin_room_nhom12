@@ -27,6 +27,7 @@ import com.example.comtam_kotlin_room.ui.screen.dish.UpdateDishScreen
 import com.example.comtam_kotlin_room.ui.screen.login.LoginScreen
 import com.example.comtam_kotlin_room.ui.screen.register.Register
 import com.example.comtam_kotlin_room.ui.screen.welcome.WelcomeScreen
+import com.example.comtam_kotlin_room.ui.screen_user.person_user.PersonUserScreen
 import com.example.comtam_kotlin_room.ui.theme.ComTam_kotlin_roomTheme
 import com.example.comtam_kotlin_room.utils.Route
 
@@ -93,7 +94,8 @@ class MainActivity : ComponentActivity() {
 
 
                     //user
-                    composable(Route.NavigationUser.screen){ BottomNavigationUser() }
+                    composable(Route.NavigationUser.screen){ BottomNavigationUser(navController) }
+                    composable(Route.PersonUser.screen){ PersonUserScreen()}
 
 
 
