@@ -107,7 +107,7 @@ fun DetailsCart(navHostController: NavHostController,oderCartViewModel: OderCart
          ) {
             Button(
                onClick = {
-                  oderCartViewModel.updateAllOrdersStatus(orderId =oderCartViewModel.idOrder.value ,newStatus=1 )
+                  oderCartViewModel.updateAllOrdersStatus(orderId =oderCartViewModel.idOrder.value ,newStatus=2 )
                          navHostController.navigate(Route.Home.screen)},
                modifier = Modifier
                   .padding(start = 25.dp)
@@ -121,6 +121,7 @@ fun DetailsCart(navHostController: NavHostController,oderCartViewModel: OderCart
 
             Button(
                onClick = {
+                  oderCartViewModel.updateAllOrdersStatus(orderId =oderCartViewModel.idOrder.value ,newStatus=1 )
                          navHostController.navigate(Route.Home.screen)
                },
                modifier = Modifier
