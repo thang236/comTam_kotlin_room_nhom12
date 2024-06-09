@@ -1,4 +1,6 @@
 package com.example.comtam_kotlin_room.ui.screen.home
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -22,16 +24,20 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.comtam_kotlin_room.data.entity.OderCart
 import com.example.comtam_kotlin_room.utils.Route
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 data class ListItem(val title: String, val description: String, val price:String)
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreen(navigationController: NavHostController
                ,orderCartViewModel: OderCartViewModel
 ) {
     val allOrders by orderCartViewModel.allOders.collectAsState(initial = emptyList())
-
-    
+    val currentDate = LocalDate.now()
+    val formattedDate = currentDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+    val totalRevenue = allOrders.sumOf { it.total.toInt() }
 
     // Sử dụng LazyColumn để hiển thị danh sách
 
@@ -45,7 +51,7 @@ fun HomeScreen(navigationController: NavHostController
       ) {
 
               Text(
-                  text = "Today:23-09-2024 ",
+                  text = "Today: ${formattedDate.toString()}",
                   style = MaterialTheme.typography.titleMedium,
                   color = Color.White,
                   modifier = Modifier.padding(top = 16.dp)
@@ -53,14 +59,14 @@ fun HomeScreen(navigationController: NavHostController
               )
 
               Text(
-                  text = "Số lượng đơn: 1",
+                  text = "Số lượng đơn: ${allOrders.size}",
                   style = MaterialTheme.typography.titleMedium,
                   color = Color.White,
               )
 
 
               Text(
-                  text = "Doanh thu: 500.000 đ",
+                  text = "Doanh thu: ${totalRevenue}k",
                   style = MaterialTheme.typography.titleMedium,
                   color = Color.White,
               )
@@ -128,7 +134,7 @@ fun ListItemView(item: OderCart,
                     text = "${item.idUser}",
                     style = MaterialTheme.typography.titleMedium,
                     color = Color.White,
-                    modifier = Modifier.padding(end = 80.dp)
+                    modifier = Modifier.padding(end = 140.dp)
                 )
                 Text(
                     text = "||",
@@ -142,9 +148,9 @@ fun ListItemView(item: OderCart,
                         }
                 )
                 Text(
-                    text = "${item.total}",
+                    text = "${item.total}k",
                     style = MaterialTheme.typography.titleMedium,
-                    color = Color.White,
+                    color = Color(0xFFFF8C00),
                     modifier = Modifier.padding(end = 10.dp, bottom = 10.dp)
                 )
             }
