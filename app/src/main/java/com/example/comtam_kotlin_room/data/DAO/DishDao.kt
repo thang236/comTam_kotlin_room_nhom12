@@ -5,7 +5,6 @@ import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
 import com.example.comtam_kotlin_room.data.entity.Dish
-import com.example.comtam_kotlin_room.model.User
 import kotlinx.coroutines.flow.Flow
 @Dao
 interface DishDao {

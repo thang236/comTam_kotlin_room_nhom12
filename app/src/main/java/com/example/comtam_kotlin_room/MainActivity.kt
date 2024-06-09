@@ -28,7 +28,6 @@ import com.example.comtam_kotlin_room.ui.screen.dish.ManagerDishScreen
 
 import com.example.comtam_kotlin_room.ui.screen.home.HomeScreen
 
-import com.example.comtam_kotlin_room.ui.screen.dish.UpdateDishScreen
 import com.example.comtam_kotlin_room.ui.screen.home.OderCartViewModel
 
 import com.example.comtam_kotlin_room.ui.screen.login.LoginScreen
@@ -129,9 +128,11 @@ class MainActivity : ComponentActivity() {
                     composable(Route.Register.screen){
                         Register(navController)
                     }
-                    composable(Route.ManegerDish.screen){ ManagerDishScreen(navController) }
-                    composable(Route.AddDish.screen){ AddDishScreen(navController) }
-                    composable(Route.UpdateDish.screen){ UpdateDishScreen(navController) }
+                    composable(Route.ManegerDish.screen){ ManagerDishScreen(
+                        state = Dishstate,
+                        onEvent = viewModelDish::onEvent,
+                        navigationController = navController,
+                    ) }
 
                     composable(Route.CategoryScreen.screen) {
                         CategoryScreen(
