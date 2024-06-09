@@ -106,40 +106,21 @@ fun AddDish(
     var selectedMainCourse by remember { mutableStateOf("Món chính") }
     var selectedDishType by remember { mutableStateOf("chọn loại món") }
     val scrollState = rememberScrollState()
-
-
-
     val mainCourseOptions = listOf("Món chính", "Món phụ", "Topping")
-
-
-
     val dishTypeOptions = mutableListOf<String>()
     for (i in 0 until  categoryViewModel.state.value.categorys.size){
         dishTypeOptions.add(categoryViewModel.state.value.categorys[i].nameCategory)
-
     }
-
-
     val context = LocalContext.current
     var imageByte by remember { mutableStateOf<ByteArray?>(null) }
-
-
     var imageUri by remember { mutableStateOf<Uri?>(null) }
-
     val getContent = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
             imageUri = it
             imageByte = uriToByteArray(context.contentResolver, it)
             Log.d("zzzzzzzz", "AddDish: $imageByte")
-
         }
     }
-
-
-
-
-
-
 
     Column(
         modifier = Modifier
@@ -150,14 +131,7 @@ fun AddDish(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        AsyncImage(
-            model = imageUri , // Use a default image resource
-            contentDescription = "",
-            modifier = Modifier
-                .padding(4.dp)
-                .size(150.dp),
-            contentScale = ContentScale.Crop,
-        )
+
         Spacer(modifier = Modifier.height(16.dp))
 
         Box(
@@ -168,6 +142,14 @@ fun AddDish(
             contentAlignment = Alignment.Center
         ) {
             Text(text = "Thêm hình ảnh", color = Color.White)
+            AsyncImage(
+                model = imageUri , // Use a default image resource
+                contentDescription = "",
+                modifier = Modifier
+                    .padding(4.dp)
+                    .size(150.dp),
+                contentScale = ContentScale.Crop,
+            )
         }
 
         Spacer(modifier = Modifier.height(16.dp))

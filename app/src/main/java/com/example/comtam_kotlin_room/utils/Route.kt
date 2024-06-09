@@ -12,7 +12,6 @@ sealed class Route(val screen: String) {
     data object SUPPORT : Route("SUPPORT")
     data object ManegerDish : Route("ManegerDish")
     data object AddDish : Route("AddDish")
-    data object UpdateDish : Route("UpdateDish")
     data object  CategoryScreen : Route ("CategoryScreen")
     data object AddCategory : Route("AddCategory")
 

@@ -33,9 +33,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.example.comtam_kotlin_room.R
 import com.example.comtam_kotlin_room.ui.screen.category.CategoryEvent
 import com.example.comtam_kotlin_room.ui.screen.category.DialogDelete
+import com.example.comtam_kotlin_room.ui.screen.category.DialogEdit
 import com.example.comtam_kotlin_room.utils.Route
 
 
@@ -119,6 +121,14 @@ fun MenuItemCard(
     onEvent: (DishEvent) -> Unit,
     navigationController: NavHostController
 ) {
+    var showDialogEdit by remember { mutableStateOf(false) }
+    if (showDialogEdit){
+        UpdateDish(
+            state = state,
+            dish = state.dishs[index],
+            onDismiss = { showDialogEdit = false },
+            onEvent = onEvent)
+    }
     var showDialogDelete by remember { mutableStateOf(false) }
 
     if (showDialogDelete) {
@@ -145,14 +155,26 @@ fun MenuItemCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.comtam),
-                contentDescription = state.dishs[index].nameDish, // Mô tả bằng tên món ăn
-                modifier = Modifier
-                    .size(64.dp)
-                    .clip(RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop
-            )
+            val imageByteArray = state.dishs[index].image
+            if (imageByteArray != null) {
+                AsyncImage(
+                    model = imageByteArray,
+                    contentDescription = state.dishs[index].nameDish, // Description using the dish name
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Image(
+                    painter = painterResource(id = R.drawable.comtam),
+                    contentDescription = state.dishs[index].nameDish, // Description using the dish name
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
             Spacer(modifier = Modifier.width(8.dp))
             Column(
                 modifier = Modifier
@@ -172,9 +194,8 @@ fun MenuItemCard(
             }
             IconButton(
                 onClick = {
-
-                    navigationController.navigate(Route.UpdateDish.screen)
-                          },
+                    showDialogEdit = true
+                },
                 modifier = Modifier
                     .size(24.dp)
             ) {
@@ -198,4 +219,5 @@ fun MenuItemCard(
         }
     }
 }
+
 

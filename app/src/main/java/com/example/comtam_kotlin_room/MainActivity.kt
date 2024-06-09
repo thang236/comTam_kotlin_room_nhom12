@@ -23,7 +23,7 @@ import com.example.comtam_kotlin_room.ui.screen.category.CategoryViewModel
 import com.example.comtam_kotlin_room.ui.screen.dish.AddDishScreen
 import com.example.comtam_kotlin_room.ui.screen.dish.DishViewModel
 import com.example.comtam_kotlin_room.ui.screen.dish.ManagerDishScreen
-import com.example.comtam_kotlin_room.ui.screen.dish.UpdateDishScreen
+
 import com.example.comtam_kotlin_room.ui.screen.home.HomeScreen
 import com.example.comtam_kotlin_room.ui.screen.login.LoginScreen
 import com.example.comtam_kotlin_room.ui.screen.welcome.WelcomeScreen
@@ -92,10 +92,12 @@ class MainActivity : ComponentActivity() {
                         onEvent = viewModelDish::onEvent,
                         navigationController = navController,
                         categoryViewModel = viewModelCategory) }
-                    composable(Route.UpdateDish.screen){ UpdateDishScreen(
-                        state = Dishstate,
-                        onEvent = viewModelDish::onEvent,
-                        navigationController = navController) }
+//                    composable(Route.UpdateDish.screen){
+////                        UpdateDishScreen(
+////                        state = Dishstate,
+////                        onEvent = viewModelDish::onEvent,
+////                        navigationController = navController)
+//                    }
                     composable(Route.CategoryScreen.screen) {
                         CategoryScreen(
                             state = state,
