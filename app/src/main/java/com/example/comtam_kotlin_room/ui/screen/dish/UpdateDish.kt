@@ -55,14 +55,20 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.comtam_kotlin_room.R
+import com.example.comtam_kotlin_room.data.DAO.DishDao
+import com.example.comtam_kotlin_room.data.entity.Dish
 import com.example.comtam_kotlin_room.ui.theme.ComTam_kotlin_roomTheme
 import com.example.comtam_kotlin_room.utils.Route
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UpdateDishScreen(navigationController: NavHostController) {
-    ComTam_kotlin_roomTheme {
+fun UpdateDishScreen(
+    state: DishState,
+    navigationController: NavHostController,
+    onEvent: (DishEvent) -> Unit
+) {
+
         Scaffold(
             topBar = {
                 Column(
@@ -100,17 +106,25 @@ fun UpdateDishScreen(navigationController: NavHostController) {
             },
 
             ) {
-            UpdateDish(navigationController)
+            UpdateDish(
+                state = state,
+                onEvent = onEvent,
+                navigationController = navigationController
+            )
         }
-    }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UpdateDish(navigationController: NavHostController) {
+fun UpdateDish(
+    state: DishState,
+    navigationController: NavHostController,
+    onEvent: (DishEvent) -> Unit
 
-    var price by remember { mutableStateOf(TextFieldValue("100k")) }
-    var foodName by remember { mutableStateOf(TextFieldValue("Sườn")) }
+) {
+    var priceText by remember { mutableStateOf(state.price.value.toString()) }
+    var NameText by remember { mutableStateOf(state.nameDish.value)}
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
@@ -141,8 +155,12 @@ fun UpdateDish(navigationController: NavHostController) {
         Spacer(modifier = Modifier.height(80.dp))
 
         TextField(
-            value = price,
-            onValueChange = { price = it },
+            value = priceText,
+            onValueChange = { newValue ->
+                priceText = newValue
+                newValue.toDoubleOrNull()?.let {
+                    state.price.value = it }
+                    },
             label = { Text("Giá") },
             modifier = Modifier
                 .background(Color.White)
@@ -156,8 +174,8 @@ fun UpdateDish(navigationController: NavHostController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         TextField(
-            value = foodName,
-            onValueChange = { foodName = it },
+            value = NameText,
+            onValueChange = { state.nameDish.value = it },
             label = { Text("Tên món ăn") },
             modifier = Modifier
                 .background(Color.White)
@@ -171,23 +189,15 @@ fun UpdateDish(navigationController: NavHostController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { /* Handle save action */ },
+            onClick = {
+
+            },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp), // Add padding to the Button
+                .padding(horizontal = 16.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA000))
         ) {
             Text("Sửa", color = Color.White, fontSize = 18.sp)
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewUpdateDishScreen() {
-    ComTam_kotlin_roomTheme {
-        Surface(modifier = Modifier.fillMaxSize(), color = Color(0xFF252121)) {
-            UpdateDishScreen(rememberNavController())
         }
     }
 }
