@@ -18,6 +18,10 @@ import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,31 +31,23 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.example.comtam_kotlin_room.R
-import com.example.comtam_kotlin_room.ui.theme.ComTam_kotlin_roomTheme
+import com.example.comtam_kotlin_room.ui.screen.category.CategoryEvent
+import com.example.comtam_kotlin_room.ui.screen.category.DialogDelete
+import com.example.comtam_kotlin_room.ui.screen.category.DialogEdit
 import com.example.comtam_kotlin_room.utils.Route
 
-data class MenuItem(val id: Int, val name: String, val price: String, val image: Int)
 
-val items = listOf(
-    MenuItem(1, "Sườn bì", "28K", R.drawable.comtam),
-    MenuItem(2, "Bì chả", "25K", R.drawable.comtam),
-    MenuItem(3, "Trứng chả", "25K", R.drawable.comtam),
-    MenuItem(4, "Sườn chả", "28K", R.drawable.comtam),
-    MenuItem(5, "Sườn bì chả", "35K", R.drawable.comtam),
-    MenuItem(6, "Sườn cay", "35K", R.drawable.comtam),
-    MenuItem(7, "Sườn trứng", "30K", R.drawable.comtam),
-    MenuItem(8, "Sườn trứng", "30K", R.drawable.comtam),
-    MenuItem(9, "Sườn trứng", "30K", R.drawable.comtam),
-    MenuItem(10, "Sườn trứng", "30K", R.drawable.comtam),
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ManagerDishScreen(navigationController: NavHostController){
+fun ManagerDishScreen(
+    state: DishState,
+    navigationController: NavHostController,
+    onEvent: (DishEvent) -> Unit){
     Scaffold(
         topBar = {
             Column(
@@ -89,35 +85,60 @@ fun ManagerDishScreen(navigationController: NavHostController){
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
+
                 navigationController.navigate(Route.AddDish.screen)
             }, contentColor = Color.White, containerColor = Color(0xFFbdf1e9)) {
                 Icon(imageVector = Icons.Rounded.Add, contentDescription = "Add", tint = Color.Black)
             }
         },
 
-        ) { inpadding ->
-        ManegerDish(items, navigationController,inpadding)
-    }
-}
-
-@Composable
-fun ManegerDish(items: List<MenuItem>, navigationController: NavHostController,inpadding: PaddingValues) {
-
-    LazyColumn(
-
-        modifier = Modifier
-            .fillMaxSize().padding(inpadding)
-            .background(Color(0xFF242020)),
-
+        ) { paddingValues ->
+        LazyColumn(
+            contentPadding = paddingValues,
+            modifier = Modifier
+                .background(Color(0xFF252121))
+                .fillMaxSize()
+                .padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-        itemsIndexed(items) { index, item ->
-            MenuItemCard(index + 1, item, navigationController = navigationController)
+            items(state.dishs.size) { index ->
+                MenuItemCard(
+                    state = state,
+                    index = index,
+                    onEvent = onEvent,
+                    navigationController = navigationController
+                )
+            }
         }
     }
 }
-
+@SuppressLint("DefaultLocale")
 @Composable
-fun MenuItemCard(order: Int, item: MenuItem, navigationController: NavHostController) {
+fun MenuItemCard(
+    state: DishState,
+    index: Int,
+    onEvent: (DishEvent) -> Unit,
+    navigationController: NavHostController
+) {
+    var showDialogEdit by remember { mutableStateOf(false) }
+    if (showDialogEdit){
+        UpdateDish(
+            state = state,
+            dish = state.dishs[index],
+            onDismiss = { showDialogEdit = false },
+            onEvent = onEvent)
+    }
+    var showDialogDelete by remember { mutableStateOf(false) }
+
+    if (showDialogDelete) {
+        DialogDelete(
+            onConfirmation = {
+                onEvent(DishEvent.DeleteDish(state.dishs[index]))
+                showDialogDelete = false
+            },
+            onDismiss = { showDialogDelete = false }
+        )
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -126,55 +147,74 @@ fun MenuItemCard(order: Int, item: MenuItem, navigationController: NavHostContro
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2F2D2D))
     ) {
-        Row(modifier = Modifier.padding(8.dp)) {
-            Text(
-                text = "$order",
-                fontSize = 18.sp,
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.align(Alignment.CenterVertically)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Image(
-                painter = painterResource(id = item.image),
-                contentDescription = item.name,
-                modifier = Modifier
-                    .size(64.dp)
-                    .clip(RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop
-            )
+        Row(
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            val imageByteArray = state.dishs[index].image
+            if (imageByteArray != null) {
+                AsyncImage(
+                    model = imageByteArray,
+                    contentDescription = state.dishs[index].nameDish, // Description using the dish name
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Image(
+                    painter = painterResource(id = R.drawable.comtam),
+                    contentDescription = state.dishs[index].nameDish, // Description using the dish name
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
             Spacer(modifier = Modifier.width(8.dp))
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .align(Alignment.CenterVertically)
             ) {
-                Text(text = item.name, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
-                Text(text = item.price, fontSize = 16.sp, color = Color(0xFFFE724C))
+                Text(
+                    text = state.dishs[index].nameDish,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+                Text(
+                    text = String.format("%.2f VND", state.dishs[index].price),
+                    fontSize = 16.sp,
+                    color = Color(0xFFFE724C)
+                )
             }
-            Spacer(modifier = Modifier.width(8.dp))
             IconButton(
-                onClick = { navigationController.navigate(Route.UpdateDish.screen) },
+                onClick = {
+                    showDialogEdit = true
+                    state.nameDish.value = state.dishs[index].nameDish
+                    state.price.value = state.dishs[index].price
+                    state.image.value = state.dishs[index].image
+                },
                 modifier = Modifier
                     .size(24.dp)
-                    .align(Alignment.CenterVertically)
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_create_24),
-                    contentDescription = "Edit",
+                    contentDescription = "Chỉnh sửa món ăn",
                     tint = Color.White
                 )
             }
-            Spacer(modifier = Modifier.width(5.dp))
             IconButton(
-                onClick = { },
+                onClick = { showDialogDelete = true },
                 modifier = Modifier
                     .size(24.dp)
-                    .align(Alignment.CenterVertically)
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_delete_24),
-                    contentDescription = "Delete",
+                    contentDescription = "Xóa món ăn",
                     tint = Color.White
                 )
             }
@@ -182,10 +222,4 @@ fun MenuItemCard(order: Int, item: MenuItem, navigationController: NavHostContro
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    ComTam_kotlin_roomTheme {
-        ManagerDishScreen(navigationController = rememberNavController())
-    }
-}
+

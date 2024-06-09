@@ -58,9 +58,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.example.comtam_kotlin_room.R
-import com.example.comtam_kotlin_room.ui.screen.dish.AddDishScreen
-import com.example.comtam_kotlin_room.ui.screen.dish.ManagerDishScreen
-import com.example.comtam_kotlin_room.ui.screen.dish.UpdateDishScreen
 import com.example.comtam_kotlin_room.ui.screen.home.DetailsCart
 import com.example.comtam_kotlin_room.data.Database
 import com.example.comtam_kotlin_room.ui.screen.category.CategoryScreen

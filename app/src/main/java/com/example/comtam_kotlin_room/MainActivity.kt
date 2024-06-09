@@ -22,9 +22,15 @@ import com.example.comtam_kotlin_room.ui.screen.BottomNavigationUser
 import com.example.comtam_kotlin_room.ui.screen.category.CategoryScreen
 import com.example.comtam_kotlin_room.ui.screen.category.CategoryViewModel
 import com.example.comtam_kotlin_room.ui.screen.dish.AddDishScreen
+import com.example.comtam_kotlin_room.ui.screen.dish.DishViewModel
 import com.example.comtam_kotlin_room.ui.screen.dish.ManagerDishScreen
+
+
+import com.example.comtam_kotlin_room.ui.screen.home.HomeScreen
+
 import com.example.comtam_kotlin_room.ui.screen.dish.UpdateDishScreen
 import com.example.comtam_kotlin_room.ui.screen.home.OderCartViewModel
+
 import com.example.comtam_kotlin_room.ui.screen.login.LoginScreen
 import com.example.comtam_kotlin_room.ui.screen.register.Register
 import com.example.comtam_kotlin_room.ui.screen.welcome.WelcomeScreen
@@ -36,6 +42,7 @@ import com.example.comtam_kotlin_room.utils.Route
 lateinit var DATABASE_INSTANCE : Database
 
 val DB_NAME = "comtam7.db"
+
 
 class MainActivity : ComponentActivity() {
     val database by lazy {
@@ -54,6 +61,17 @@ class MainActivity : ComponentActivity() {
             }
         }
     )
+
+    private val viewModelDish by viewModels<DishViewModel>(
+        factoryProducer = {
+            object : ViewModelProvider.Factory{
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return DishViewModel(database.DishDao) as T
+                }
+            }
+        }
+    )
+
     private val oderCartViewModel by viewModels<OderCartViewModel>(
         factoryProducer = {
             object : ViewModelProvider.Factory{
@@ -64,13 +82,18 @@ class MainActivity : ComponentActivity() {
         }
     )
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             val state = viewModelCategory.state.collectAsState().value
 
+            val Dishstate = viewModelDish.state.collectAsState().value
+
+
             DATABASE_INSTANCE = database
+
 
 
             ComTam_kotlin_roomTheme {
@@ -89,12 +112,27 @@ class MainActivity : ComponentActivity() {
                     composable(Route.LOGIN.screen){
                         LoginScreen(navController)
                     }
+
+                    composable(Route.ManegerDish.screen){
+                        ManagerDishScreen(
+                            state = Dishstate,
+                            onEvent = viewModelDish::onEvent,
+                        navigationController = navController
+                        )
+                    }
+                    composable(Route.AddDish.screen){ AddDishScreen(
+                        state = Dishstate,
+                        onEvent = viewModelDish::onEvent,
+                        navigationController = navController,
+                        categoryViewModel = viewModelCategory) }
+
                     composable(Route.Register.screen){
                         Register(navController)
                     }
                     composable(Route.ManegerDish.screen){ ManagerDishScreen(navController) }
                     composable(Route.AddDish.screen){ AddDishScreen(navController) }
                     composable(Route.UpdateDish.screen){ UpdateDishScreen(navController) }
+
                     composable(Route.CategoryScreen.screen) {
                         CategoryScreen(
                             state = state,
