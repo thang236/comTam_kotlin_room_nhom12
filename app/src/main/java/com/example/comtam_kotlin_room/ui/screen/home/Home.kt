@@ -10,41 +10,33 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.comtam_kotlin_room.data.entity.OderCart
 import com.example.comtam_kotlin_room.utils.Route
 
 data class ListItem(val title: String, val description: String, val price:String)
 
 @Composable
-fun HomeScreen(navigationController: NavHostController) {
+fun HomeScreen(navigationController: NavHostController,orderCartViewModel: OderCartViewModel) {
+    val allOrders by orderCartViewModel.allOders.collectAsState(initial = emptyList())
 
-    // Danh sách các mục để hiển thị
-    val itemsList = listOf(
-        ListItem("Đơn hàng CT2E22E", "Từ chối", "100.000 đ"),
-        ListItem("Đơn hàng CT2E2206", "Chấp nhận", "500.000 đ"),
-        ListItem("Đơn hàng CT2E23E", "Từ chối", "100.800 đ"),
-        ListItem("Đơn hàng CT2E12E", "Từ chối", "101.854 đ"),
-        ListItem("Đơn hàng CT2E12E", "Từ chối", "101.854 đ"),
-        ListItem("Đơn hàng CT2E12E", "Từ chối", "101.854 đ"),
-        ListItem("Đơn hàng CT2E12E", "Từ chối", "101.854 đ"),
-        ListItem("Đơn hàng CT2E12E", "Từ chối", "101.854 đ"),
-        ListItem("Đơn hàng CT2E12E", "Từ chối", "101.854 đ"),
-        ListItem("Đơn hàng CT2E12E", "Từ chối", "101.854 đ"),
-
-        )
+    
 
     // Sử dụng LazyColumn để hiển thị danh sách
 
 
-      Column(  modifier = Modifier.
-      fillMaxSize().
-      background(Color(0xff252121)),
+      Column(  modifier = Modifier
+          .fillMaxSize()
+          .background(Color(0xff252121)),
           horizontalAlignment = Alignment.CenterHorizontally,
           verticalArrangement = Arrangement.Center
 
@@ -79,7 +71,7 @@ fun HomeScreen(navigationController: NavHostController) {
                   .background(Color(0xff252121))
           )
           {
-              items(itemsList) { item ->
+              items(allOrders) { item ->
                   ListItemView(item = item, navigationController = navigationController)
               }
           }
@@ -89,12 +81,18 @@ fun HomeScreen(navigationController: NavHostController) {
 }
 
 @Composable
-fun ListItemView(item: ListItem,navigationController: NavHostController) {
+fun ListItemView(item: OderCart,navigationController: NavHostController) {
 
+    val textColor = when (item.status) {
+        0 -> Color.Yellow // Màu chữ cho trạng thái "Chưa xác nhận"
+        1 -> Color.Red // Màu chữ cho trạng thái "Từ chối"
+        2 -> Color.Green // Màu chữ cho trạng thái "Xác nhận"
+        else -> Color.Gray // Màu chữ mặc định cho trạng thái không xác định
+    }
     Card(
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
-            .padding( top = 10.dp)
+            .padding(top = 10.dp)
 
             .height(110.dp)
             .fillMaxWidth(),
@@ -118,9 +116,15 @@ fun ListItemView(item: ListItem,navigationController: NavHostController) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = item.title,
+                    text = "Đơn hàng:",
                     style = MaterialTheme.typography.titleMedium,
                     color = Color.White,
+                )
+                Text(
+                    text = "${item.idUser}",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.White,
+                    modifier = Modifier.padding(end = 80.dp)
                 )
                 Text(
                     text = "||",
@@ -129,11 +133,11 @@ fun ListItemView(item: ListItem,navigationController: NavHostController) {
                     modifier = Modifier
                         .padding(start = 20.dp)
                         .clickable {
-                          navigationController.navigate(Route.DetailCart.screen)
+                            navigationController.navigate(Route.DetailCart.screen)
                         }
                 )
                 Text(
-                    text = item.price,
+                    text = "${item.total}",
                     style = MaterialTheme.typography.titleMedium,
                     color = Color.White,
                     modifier = Modifier.padding(end = 10.dp, bottom = 10.dp)
@@ -149,9 +153,9 @@ fun ListItemView(item: ListItem,navigationController: NavHostController) {
                     color = Color.White,
                 )
                 Text(
-                    text = item.description,
+                    text = "${statusToString(item.status)}",
                     style = MaterialTheme.typography.titleMedium,
-                    color = Color.Red,
+                    color = textColor,
                     modifier = Modifier.padding(end = 10.dp)
                 )
             }
@@ -160,8 +164,14 @@ fun ListItemView(item: ListItem,navigationController: NavHostController) {
     }
 }
 @Composable
-
-fun HomeScreenPreview() {
-    HomeScreen(navigationController = rememberNavController())
+fun statusToString(status: Int): String {
+    return when (status) {
+        0 -> "Chưa xác nhận"
+        1 -> "Từ chối"
+        2 -> "Xác nhận"
+        else -> "Unknown"
+    }
 }
+
+
 
