@@ -60,6 +60,7 @@ val room_version = "2.6.1"
 
 dependencies {
 
+    implementation(libs.androidx.runtime.livedata)
     val nav_version = "2.7.7"
 
     // Java language implementation
