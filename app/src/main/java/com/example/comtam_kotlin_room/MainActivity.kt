@@ -24,6 +24,7 @@ import com.example.comtam_kotlin_room.ui.screen.category.CategoryViewModel
 import com.example.comtam_kotlin_room.ui.screen.dish.AddDishScreen
 import com.example.comtam_kotlin_room.ui.screen.dish.ManagerDishScreen
 import com.example.comtam_kotlin_room.ui.screen.dish.UpdateDishScreen
+import com.example.comtam_kotlin_room.ui.screen.home.OderCartViewModel
 import com.example.comtam_kotlin_room.ui.screen.login.LoginScreen
 import com.example.comtam_kotlin_room.ui.screen.register.Register
 import com.example.comtam_kotlin_room.ui.screen.welcome.WelcomeScreen
@@ -34,7 +35,7 @@ import com.example.comtam_kotlin_room.utils.Route
 
 lateinit var DATABASE_INSTANCE : Database
 
-val DB_NAME = "comtam3.db"
+val DB_NAME = "comtam7.db"
 
 class MainActivity : ComponentActivity() {
     val database by lazy {
@@ -53,6 +54,16 @@ class MainActivity : ComponentActivity() {
             }
         }
     )
+    private val oderCartViewModel by viewModels<OderCartViewModel>(
+        factoryProducer = {
+            object : ViewModelProvider.Factory{
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return OderCartViewModel(database.oderCartDao) as T
+                }
+            }
+        }
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -72,7 +83,7 @@ class MainActivity : ComponentActivity() {
                         WelcomeScreen(navController)
                     }
                     composable(Route.Home.screen){
-                        BottomNavigation(viewModelCategory, navController)
+                        BottomNavigation(viewModelCategory, navController,oderCartViewModel)
 
                     }
                     composable(Route.LOGIN.screen){
