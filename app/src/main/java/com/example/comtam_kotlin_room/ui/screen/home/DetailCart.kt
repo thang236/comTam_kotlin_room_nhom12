@@ -1,5 +1,6 @@
 package com.example.comtam_kotlin_room.ui.screen.home
 
+import android.util.Log
 import androidx.compose.animation.VectorConverter
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,6 +29,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,6 +38,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -44,10 +48,13 @@ import com.example.comtam_kotlin_room.ui.screen.manager.MangerScreen
 import com.example.comtam_kotlin_room.ui.screen.support.SupportScreen
 import com.example.comtam_kotlin_room.ui.screen.thongke.ListTK
 import com.example.comtam_kotlin_room.ui.screen.thongke.ThongKe
+import com.example.comtam_kotlin_room.ui.screen_user.home_user.items
 import com.example.comtam_kotlin_room.utils.Route
 data class ItemCart( val id:String,val name:String,val price:String,val quantity:String)
 @Composable
-fun DetailsCart(navHostController: NavHostController) {
+fun DetailsCart(navHostController: NavHostController,oderCartViewModel: OderCartViewModel= viewModel()) {
+
+
    val mainItems = listOf(
       ItemCart("1", "Sườn Bì", "56k", "02"),
       ItemCart("2", "Bì chả", "25k", "01"),
@@ -98,7 +105,9 @@ fun DetailsCart(navHostController: NavHostController) {
             horizontalArrangement = Arrangement.SpaceBetween
          ) {
             Button(
-               onClick = { },
+               onClick = {
+                  oderCartViewModel.updateAllOrdersStatus(orderId = ,newStatus=1 )
+                         navHostController.navigate(Route.Home.screen)},
                modifier = Modifier
                   .padding(start = 25.dp)
                   .height(40.dp)
@@ -394,6 +403,7 @@ fun DetailsCart(navHostController: NavHostController) {
 
       }
    }
+
 }
 
 @Composable
@@ -454,10 +464,7 @@ fun ListItemViewMC(item: ItemCart,navHostController: NavHostController) {
       }
    }
 }
-@Composable
-fun DetailCartScreenPreview() {
-   DetailsCart(navHostController = rememberNavController())
-}
+
 
 
 

@@ -232,7 +232,7 @@ fun MyBottomAppBar( viewModelCategory: CategoryViewModel, navController: NavHost
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(Route.Home.screen) { HomeScreen(navigationController,oderCartViewModel) }
-            composable(Route.DetailCart.screen) { DetailsCart(navigationController) }
+            composable(Route.DetailCart.screen) { DetailsCart(navigationController,oderCartViewModel) }
 //            composable(Route.MANAGER.screen) { MangerScreen(navigationController) }
             composable(Route.MANAGER.screen) { MangerScreen(navController) }
             composable(Route.THONGKE.screen) { ThongKe(navigationController) }

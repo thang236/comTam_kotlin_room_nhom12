@@ -107,9 +107,6 @@ class MainActivity : ComponentActivity() {
                     //user
                     composable(Route.NavigationUser.screen){ BottomNavigationUser(navController) }
                     composable(Route.PersonUser.screen){ PersonUserScreen()}
-
-
-
                 }
             }
         }
