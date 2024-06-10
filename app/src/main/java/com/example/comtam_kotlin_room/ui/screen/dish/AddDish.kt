@@ -112,7 +112,7 @@ fun AddDish(
     dishViewModel: DishViewModel,
 ) {
     var selectedMainCourse by remember { mutableStateOf("Chọn loại") }
-    val listDish = mutableListOf("món chính", "món phụ ", "Topping", "Khác")
+    val listDish = listOf("món chính", "món phụ", "Topping", "Khác")
 
     var selectedDishType by remember { mutableStateOf("chọn loại món") }
     val scrollState = rememberScrollState()
@@ -131,7 +131,7 @@ fun AddDish(
     }
 
     var idCategory by remember { mutableIntStateOf(-1) }
-    var type by remember { mutableStateOf("") }
+    var type by remember { mutableStateOf(-1) } // Change default value to -1
     var priceText by remember { mutableStateOf(state.price.value.takeIf { it != 0.0 }?.toString() ?: "") }
     var nameDish by remember { mutableStateOf(state.nameDish.value) }
     var isPriceError by remember { mutableStateOf(false) }
@@ -189,6 +189,7 @@ fun AddDish(
             selectedDishType = it
             isDishTypeError = false
             listDish.indexOf(it).takeIf { index -> index >= 0 }?.let { index ->
+                type = index // Update type here
                 state.type.value = index
             }
         }
@@ -246,7 +247,6 @@ fun AddDish(
             })
         )
 
-
         if (isPriceError) {
             when {
                 priceText.isBlank() -> {
@@ -280,7 +280,6 @@ fun AddDish(
             isError = isNameDishError,
         )
 
-
         if (isNameDishError) {
             Text(text = "Tên món ăn không được rỗng", color = MaterialTheme.colorScheme.error)
         }
@@ -289,7 +288,7 @@ fun AddDish(
 
         Button(
             onClick = {
-                val isValid = imageByte != null && !isPriceError && nameDish.isNotBlank() && idCategory != -1 && state.type.value != -1
+                val isValid = imageByte != null && !isPriceError && nameDish.isNotBlank() && idCategory != -1 && type != -1
 
                 if (isValid) {
                     onEvent(
@@ -298,7 +297,7 @@ fun AddDish(
                             price = state.price.value,
                             idCategory = idCategory,
                             image = imageByte!!,
-                            type = state.type.value
+                            type = type // Use the updated type value here
                         )
                     )
                     navigationController.popBackStack()
@@ -315,7 +314,7 @@ fun AddDish(
                     if (idCategory == -1) {
                         isMainCourseError = true
                     }
-                    if (state.type.value == -1) {
+                    if (type == -1) { // Validate the updated type value
                         isDishTypeError = true
                     }
                 }
@@ -329,6 +328,7 @@ fun AddDish(
         }
     }
 }
+
 
 @Composable
 fun DropdownMenuBox(
