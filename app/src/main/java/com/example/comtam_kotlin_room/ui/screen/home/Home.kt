@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -109,53 +110,54 @@ fun ListItemView(item: OderCart,
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp) ,
 //        colors = CardDefaults.cardColors(containerColor = Color(0x2F2D2D))
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.DarkGray) // Màu nền của Card
-
-        ) {
         Column(
             modifier = Modifier
-                .padding(16.dp)
+                .fillMaxSize()
+                .background(Color.DarkGray)
+                .padding(horizontal = 20.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 15.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Đơn hàng:",
+                    text = "Đơn hàng: ${item.idCart}",
                     style = MaterialTheme.typography.titleMedium,
                     color = Color.White,
-                )
-                Text(
-                    text = "${item.idUser}",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.White,
-                    modifier = Modifier.padding(end = 140.dp)
                 )
                 Text(
                     text = "||",
                     style = MaterialTheme.typography.titleLarge,
                     color = Color.White,
                     modifier = Modifier
-                        .padding(start = 20.dp)
+                        .weight(0.3f)
                         .clickable {
                             orderCartViewModel.idOrder.value = item.idCart
                             navigationController.navigate(Route.DetailCart.screen)
-                        }
+                        },
+                    textAlign = TextAlign.End
                 )
                 Text(
                     text = "${item.total}k",
                     style = MaterialTheme.typography.titleMedium,
                     color = Color(0xFFFF8C00),
-                    modifier = Modifier.padding(end = 10.dp, bottom = 10.dp)
+                    modifier = Modifier.weight(0.3f),
+                    textAlign = TextAlign.End
                 )
+
+
+
             }
+
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
@@ -163,15 +165,81 @@ fun ListItemView(item: OderCart,
                     style = MaterialTheme.typography.titleMedium,
                     color = Color.White,
                 )
+
                 Text(
                     text = "${statusToString(item.status)}",
                     style = MaterialTheme.typography.titleMedium,
                     color = textColor,
-                    modifier = Modifier.padding(end = 10.dp)
                 )
+
             }
+
+
+
         }
-    }
+//        Box(
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .background(Color.DarkGray) // Màu nền của Card
+//
+//        ) {
+//        Column(
+//            modifier = Modifier
+//                .padding(16.dp)
+//        ) {
+//            Row(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(top = 15.dp),
+//                horizontalArrangement = Arrangement.SpaceBetween
+//            ) {
+//                Text(
+//                    text = "Đơn hàng:",
+//                    style = MaterialTheme.typography.titleMedium,
+//                    color = Color.White,
+//                )
+//                Text(
+//                    text = "${item.idUser}",
+//                    style = MaterialTheme.typography.titleMedium,
+//                    color = Color.White,
+//                    modifier = Modifier.padding(end = 140.dp)
+//                )
+//                Text(
+//                    text = "||",
+//                    style = MaterialTheme.typography.titleLarge,
+//                    color = Color.White,
+//                    modifier = Modifier
+//                        .padding(start = 20.dp)
+//                        .clickable {
+//                            orderCartViewModel.idOrder.value = item.idCart
+//                            navigationController.navigate(Route.DetailCart.screen)
+//                        }
+//                )
+//                Text(
+//                    text = "${item.total}k",
+//                    style = MaterialTheme.typography.titleMedium,
+//                    color = Color(0xFFFF8C00),
+//                    modifier = Modifier.padding(end = 10.dp, bottom = 10.dp)
+//                )
+//            }
+//            Row(
+//                modifier = Modifier.fillMaxWidth(),
+//                horizontalArrangement = Arrangement.SpaceBetween
+//            ) {
+//                Text(
+//                    text = "Trạng Thái",
+//                    style = MaterialTheme.typography.titleMedium,
+//                    color = Color.White,
+//                )
+//                Text(
+//                    text = "${statusToString(item.status)}",
+//                    style = MaterialTheme.typography.titleMedium,
+//                    color = textColor,
+//                    modifier = Modifier.padding(end = 10.dp)
+//                )
+//            }
+//        }
+//    }
     }
 }
 @Composable
