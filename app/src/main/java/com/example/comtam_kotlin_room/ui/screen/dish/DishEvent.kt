@@ -10,6 +10,7 @@ sealed interface DishEvent {
         val price: Double,
         var idCategory: Int,
         var image: ByteArray,
+        var type: Int
     ): DishEvent
 
     data class DeleteDish(
