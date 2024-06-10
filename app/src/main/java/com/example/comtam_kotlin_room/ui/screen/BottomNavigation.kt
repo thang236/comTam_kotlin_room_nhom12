@@ -58,28 +58,28 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.example.comtam_kotlin_room.R
-import com.example.comtam_kotlin_room.ui.screen.dish.AddDishScreen
-import com.example.comtam_kotlin_room.ui.screen.dish.ManagerDishScreen
-import com.example.comtam_kotlin_room.ui.screen.dish.UpdateDishScreen
 import com.example.comtam_kotlin_room.ui.screen.home.DetailsCart
 import com.example.comtam_kotlin_room.data.Database
 import com.example.comtam_kotlin_room.ui.screen.category.CategoryScreen
 import com.example.comtam_kotlin_room.ui.screen.category.CategoryViewModel
 import com.example.comtam_kotlin_room.ui.screen.home.HomeScreen
+import com.example.comtam_kotlin_room.ui.screen.home.OderCartViewModel
 import com.example.comtam_kotlin_room.ui.screen.manager.MangerScreen
 import com.example.comtam_kotlin_room.ui.screen.support.SupportScreen
+import com.example.comtam_kotlin_room.ui.screen.thongke.BieuDo
+import com.example.comtam_kotlin_room.ui.screen.thongke.History
 import com.example.comtam_kotlin_room.ui.screen.thongke.ThongKe
 import com.example.comtam_kotlin_room.utils.Route
 
 
 
 @Composable
-fun BottomNavigation( viewModelCategory: CategoryViewModel, navController: NavHostController){
+fun BottomNavigation( viewModelCategory: CategoryViewModel, navController: NavHostController,oderCartViewModel: OderCartViewModel){
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        MyBottomAppBar(viewModelCategory, navController)
+        MyBottomAppBar(viewModelCategory, navController,oderCartViewModel)
     }
 }
 
@@ -87,7 +87,7 @@ fun BottomNavigation( viewModelCategory: CategoryViewModel, navController: NavHo
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 
-fun MyBottomAppBar( viewModelCategory: CategoryViewModel, navController: NavHostController) {
+fun MyBottomAppBar( viewModelCategory: CategoryViewModel, navController: NavHostController,oderCartViewModel: OderCartViewModel) {
 
     val navigationController = rememberNavController()
     val selected = remember {
@@ -228,14 +228,13 @@ fun MyBottomAppBar( viewModelCategory: CategoryViewModel, navController: NavHost
             startDestination = Route.Home.screen,
             modifier = Modifier.padding(paddingValues)
         ) {
-            composable(Route.Home.screen) { HomeScreen(navigationController) }
-            composable(Route.DetailCart.screen) { DetailsCart(navigationController) }
+            composable(Route.Home.screen) { HomeScreen(navigationController,oderCartViewModel) }
+            composable(Route.DetailCart.screen) { DetailsCart(navigationController,oderCartViewModel) }
 //            composable(Route.MANAGER.screen) { MangerScreen(navigationController) }
             composable(Route.MANAGER.screen) { MangerScreen(navController) }
-            composable(Route.THONGKE.screen) { ThongKe() }
-         
-
-
+            composable(Route.THONGKE.screen) { ThongKe(navigationController) }
+         composable(Route.History.screen){ History()}
+            composable(Route.BieuDo.screen){ BieuDo(navigationController)}
             composable(Route.SUPPORT.screen) { SupportScreen() }
 
 
@@ -244,3 +243,4 @@ fun MyBottomAppBar( viewModelCategory: CategoryViewModel, navController: NavHost
     }
 
 }
+

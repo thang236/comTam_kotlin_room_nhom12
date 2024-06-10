@@ -60,6 +60,7 @@ val room_version = "2.6.1"
 
 dependencies {
 
+    implementation(libs.androidx.runtime.livedata)
     val nav_version = "2.7.7"
 
     // Java language implementation
@@ -116,7 +117,8 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.0.1")
 
     //asyc image
-    implementation("io.coil-kt:coil-gif:2.6.0")
+    implementation("io.coil-kt:coil-compose:2.6.0")
+
 
 
     implementation(libs.androidx.core.ktx)
