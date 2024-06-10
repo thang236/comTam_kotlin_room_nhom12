@@ -152,7 +152,7 @@ class MainActivity : ComponentActivity() {
 
 
 
-                    composable(Route.PersonUser.screen){ PersonUserScreen()}
+                    composable(Route.PersonUser.screen){ PersonUserScreen(navController)}
                 }
             }
         }
