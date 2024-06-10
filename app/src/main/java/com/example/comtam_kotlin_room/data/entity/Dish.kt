@@ -8,7 +8,7 @@ data class Dish(
     var price: Double,
     var idCategory: Int,
     var image: ByteArray,
-    var title: Int,
+    var type: Int,
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 )

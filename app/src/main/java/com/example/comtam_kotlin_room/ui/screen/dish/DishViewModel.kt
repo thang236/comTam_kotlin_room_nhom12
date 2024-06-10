@@ -51,7 +51,7 @@ class DishViewModel(
                     price = event.price,
                     idCategory = event.idCategory,
                     image = event.image,
-                    title = event.title
+                    type = event.type
                 )
                 viewModelScope.launch {
                     dao.upsertDish(dish)

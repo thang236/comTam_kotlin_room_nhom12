@@ -14,5 +14,5 @@ data class DishState(
     val id: MutableState<Int> = mutableStateOf(0),
 
     var image :  MutableState<ByteArray?> = mutableStateOf(null),
-    var title: MutableState<Int> = mutableStateOf(0)
+    var type: MutableState<Int> = mutableIntStateOf(-1)
 )

@@ -43,6 +43,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.ui.text.input.ImeAction
 import com.example.comtam_kotlin_room.data.entity.Dish
 import com.example.comtam_kotlin_room.ui.screen_user.home_user.items
+import okhttp3.internal.format
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -111,17 +112,16 @@ fun AddDish(
     dishViewModel: DishViewModel,
 ) {
     var selectedMainCourse by remember { mutableStateOf("Chọn loại") }
+    val listDish = mutableListOf<String>("món chính", "món phụ ", "Topping","Khác")
+
     var selectedDishType by remember { mutableStateOf("chọn loại món") }
     val scrollState = rememberScrollState()
+
     val mainCourseOptions = mutableListOf<String>()
-    for (i in 0 until dishViewModel.state.value.dishs.size) {
-        mainCourseOptions.add(titleToString(
-            dishViewModel.state.value.dishs[i].title))
-    }
-    val dishTypeOptions = mutableListOf<String>()
     for (i in 0 until categoryViewModel.state.value.categorys.size) {
-        dishTypeOptions.add(categoryViewModel.state.value.categorys[i].nameCategory)
+        mainCourseOptions.add(categoryViewModel.state.value.categorys[i].nameCategory)
     }
+
     val context = LocalContext.current
     var imageByte by remember { mutableStateOf<ByteArray?>(null) }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
@@ -134,7 +134,7 @@ fun AddDish(
     }
 
     var idCategory by remember { mutableIntStateOf(-1) }
-    var title by remember { mutableStateOf("") }
+    var type by remember { mutableStateOf("") }
     var priceText by remember { mutableStateOf(state.price.value.takeIf { it != 0.0 }?.toString() ?: "") }
     var nameDish by remember { mutableStateOf(state.nameDish.value) }
     var isPriceError by remember { mutableStateOf(false) }
@@ -173,16 +173,26 @@ fun AddDish(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+
         DropdownMenuBox(selectedMainCourse, mainCourseOptions) {
             selectedMainCourse = it
-        }
-
-        DropdownMenuBox(selectedDishType, dishTypeOptions) {
-            selectedDishType = it
-            isDishTypeError = false
             for (i in 0 until categoryViewModel.state.value.categorys.size) {
+
+                Log.d("qqqqqqqqq", "AddDish: "+ categoryViewModel.state.value.categorys[i].nameCategory)
+                Log.d("qqqqqqqqq", "AddDish: $it")
                 if (categoryViewModel.state.value.categorys[i].nameCategory == it) {
                     idCategory = categoryViewModel.state.value.categorys[i].id
+                }
+            }
+
+        }
+
+        DropdownMenuBox(selectedDishType, listDish) {
+            selectedDishType = it
+            isDishTypeError = false
+            for (i in 0 until listDish.size){
+                if (listDish[i] == it){
+                    state.type.value = i
                 }
             }
         }
@@ -249,7 +259,14 @@ fun AddDish(
 
         Button(
             onClick = {
-                val isValid = imageByte != null && !isPriceError && nameDish.isNotBlank() && idCategory != -1
+                Log.d("zzzzzzzzz", "state.nameDish.value:, ${state.nameDish.value} ")
+                Log.d("zzzzzzzzz", "state.price.value:, ${state.price.value} ")
+                Log.d("zzzzzzzzz", "idCategory:, $idCategory ")
+                Log.d("zzzzzzzzz", "state.type.value:, ${state.type.value} ")
+
+
+
+                val isValid = imageByte != null && !isPriceError && nameDish.isNotBlank() && idCategory != -1 && state.type.value !=-1
 
                 if (isValid) {
                     onEvent(DishEvent.SaveDish(
@@ -257,7 +274,7 @@ fun AddDish(
                         price = state.price.value,
                         idCategory = idCategory,
                         image = imageByte!!,
-                        title = state.title.value
+                        type = state.type.value
                     ))
                     navigationController.popBackStack()
                 } else {
