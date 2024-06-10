@@ -2,6 +2,7 @@ package com.example.comtam_kotlin_room.ui.screen
 
 import androidx.annotation.MainThread
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,6 +36,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -48,6 +50,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -103,17 +106,38 @@ fun MyBottomAppBar( viewModelCategory: CategoryViewModel, navController: NavHost
             Column(Modifier.fillMaxWidth()) {
                  TopAppBar(
                      title = {
-                         Row (modifier = Modifier.fillMaxWidth(),
-                             verticalAlignment = Alignment.CenterVertically) {
-                             Image(
-                                 painter = painterResource(id = R.drawable.logo),
-                                 contentDescription ="",
-                                 contentScale = ContentScale.Fit,
-                                 modifier = Modifier.fillMaxWidth(0.12f)
+                         if (selected.value == Icons.Default.Person){
+                             Row (modifier = Modifier.fillMaxWidth(),
+                                 verticalAlignment = Alignment.CenterVertically,
+                                 horizontalArrangement = Arrangement.Start) {
+                                 Image(
+                                     painter = painterResource(id = R.drawable.logo),
+                                     contentDescription ="",
+                                     contentScale = ContentScale.Fit,
+                                     modifier = Modifier.fillMaxWidth(0.12f)
                                  )
-                             Text(text = "Cum tứm đim")
+                                 Text(text = "Cum tứm đim", modifier = Modifier.weight(0.2f))
+                                 TextButton(onClick = { navController.navigate(Route.LOGIN.screen){
+                                     popUpTo(Route.Home.screen){inclusive = true}
+                                 } }) {
+                                     Text(text = "Sign Out", color = Color.White)
+                                 }
 
+                             }
+                         } else {
+                             Row (modifier = Modifier.fillMaxWidth(),
+                                 verticalAlignment = Alignment.CenterVertically) {
+                                 Image(
+                                     painter = painterResource(id = R.drawable.logo),
+                                     contentDescription ="",
+                                     contentScale = ContentScale.Fit,
+                                     modifier = Modifier.fillMaxWidth(0.12f)
+                                 )
+                                 Text(text = "Cum tứm đim")
+
+                             }
                          }
+                         
                      },
                      colors = TopAppBarDefaults.topAppBarColors(
                          containerColor = Color(0xff252121),
@@ -238,7 +262,7 @@ fun MyBottomAppBar( viewModelCategory: CategoryViewModel, navController: NavHost
             composable(Route.THONGKE.screen) { ThongKe(navigationController) }
          composable(Route.History.screen){ History()}
             composable(Route.BieuDo.screen){ BieuDo(navigationController)}
-            composable(Route.SUPPORT.screen) { SupportScreen() }
+            composable(Route.SUPPORT.screen) { SupportScreen(navController) }
 
 
 

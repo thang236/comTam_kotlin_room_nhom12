@@ -45,12 +45,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.comtam_kotlin_room.R
+import com.example.comtam_kotlin_room.utils.Route
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
 @Composable
-fun EditPersonUser() {
+fun EditPersonUser(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -62,7 +63,7 @@ fun EditPersonUser() {
                 .fillMaxWidth()
                 .background(Color(0xff000000))
                 .padding(horizontal = 10.dp)
-                .padding(top = 10.dp)
+                .padding(top = 30.dp)
         ) {
             Row(
                 modifier = Modifier
@@ -75,7 +76,7 @@ fun EditPersonUser() {
                     Icons.Default.ArrowBackIosNew,
                     contentDescription = "",
                     modifier = Modifier.size(20.dp)
-                        .clickable {  },
+                        .clickable { navController.navigate(Route.NavigationUser.screen) },
                     tint = Color.White
                 )
             }
@@ -204,7 +205,7 @@ fun EditPersonUser() {
                 )
                 Box(modifier = Modifier.align(Alignment.BottomEnd)) {
                     IconButton(
-                        onClick = { /*TODO*/ },
+                        onClick = { navController.navigate(Route.ChangImageUser.screen) },
                         colors = IconButtonDefaults.iconButtonColors(
                             containerColor = Color.White
                         ),

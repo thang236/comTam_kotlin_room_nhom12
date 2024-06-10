@@ -28,6 +28,8 @@ import com.example.comtam_kotlin_room.ui.screen.home.OderCartViewModel
 import com.example.comtam_kotlin_room.ui.screen.login.LoginScreen
 import com.example.comtam_kotlin_room.ui.screen.register.Register
 import com.example.comtam_kotlin_room.ui.screen.welcome.WelcomeScreen
+import com.example.comtam_kotlin_room.ui.screen_user.person_user.ChangeImageUser
+import com.example.comtam_kotlin_room.ui.screen_user.person_user.EditPersonUser
 import com.example.comtam_kotlin_room.ui.screen_user.person_user.PersonUserScreen
 import com.example.comtam_kotlin_room.ui.theme.ComTam_kotlin_roomTheme
 import com.example.comtam_kotlin_room.utils.Route
@@ -106,7 +108,8 @@ class MainActivity : ComponentActivity() {
 
                     //user
                     composable(Route.NavigationUser.screen){ BottomNavigationUser(navController) }
-                    composable(Route.PersonUser.screen){ PersonUserScreen()}
+                    composable(Route.EditPersonUser.screen){ EditPersonUser(navController)}
+                    composable(Route.ChangImageUser.screen){ ChangeImageUser(navController)}
 
 
 

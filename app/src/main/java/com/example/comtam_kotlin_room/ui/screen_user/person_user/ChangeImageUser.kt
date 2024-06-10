@@ -36,11 +36,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.comtam_kotlin_room.R
+import com.example.comtam_kotlin_room.utils.Route
 
-@Preview(showBackground = true)
 @Composable
-fun ChangeImageUser() {
+fun ChangeImageUser( navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -52,7 +53,7 @@ fun ChangeImageUser() {
                 .fillMaxWidth()
                 .background(Color(0xff000000))
                 .padding(horizontal = 10.dp)
-                .padding(top = 10.dp)
+                .padding(top = 30.dp)
         ) {
             Row(
                 modifier = Modifier
@@ -66,7 +67,7 @@ fun ChangeImageUser() {
                     contentDescription = "",
                     modifier = Modifier
                         .size(20.dp)
-                        .clickable { },
+                        .clickable { navController.popBackStack()  },
                     tint = Color.White
                 )
             }
