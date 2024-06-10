@@ -116,14 +116,16 @@ class MainActivity : ComponentActivity() {
                         ManagerDishScreen(
                             state = Dishstate,
                             onEvent = viewModelDish::onEvent,
-                        navigationController = navController
+                        navigationController = navController,
+                            dishViewModel = viewModelDish
                         )
                     }
                     composable(Route.AddDish.screen){ AddDishScreen(
                         state = Dishstate,
                         onEvent = viewModelDish::onEvent,
                         navigationController = navController,
-                        categoryViewModel = viewModelCategory) }
+                        categoryViewModel = viewModelCategory,
+                        dishViewModel = viewModelDish) }
 
                     composable(Route.Register.screen){
                         Register(navController)
@@ -132,6 +134,7 @@ class MainActivity : ComponentActivity() {
                         state = Dishstate,
                         onEvent = viewModelDish::onEvent,
                         navigationController = navController,
+                        dishViewModel = viewModelDish
                     ) }
 
                     composable(Route.CategoryScreen.screen) {

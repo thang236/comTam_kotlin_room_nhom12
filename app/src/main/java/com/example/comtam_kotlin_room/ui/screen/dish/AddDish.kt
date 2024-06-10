@@ -2,6 +2,7 @@ package com.example.comtam_kotlin_room.ui.screen.dish
 
 import android.annotation.SuppressLint
 import android.content.ContentResolver
+import android.icu.text.CaseMap.Title
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -37,7 +38,11 @@ import com.example.comtam_kotlin_room.ui.screen.category.CategoryViewModel
 import com.example.comtam_kotlin_room.ui.theme.ComTam_kotlin_roomTheme
 import com.example.comtam_kotlin_room.utils.Route
 import java.io.IOException
-
+import android.widget.Toast
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.ui.text.input.ImeAction
+import com.example.comtam_kotlin_room.data.entity.Dish
+import com.example.comtam_kotlin_room.ui.screen_user.home_user.items
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -46,8 +51,10 @@ fun AddDishScreen(
     state: DishState,
     navigationController: NavHostController,
     onEvent: (DishEvent) -> Unit,
-    categoryViewModel: CategoryViewModel
+    categoryViewModel: CategoryViewModel,
+    dishViewModel: DishViewModel
 ) {
+
     Scaffold(
         topBar = {
             Column(
@@ -87,28 +94,32 @@ fun AddDishScreen(
             state = state,
             onEvent = onEvent,
             navigationController = navigationController,
-            categoryViewModel = categoryViewModel
+            categoryViewModel = categoryViewModel,
+            dishViewModel = dishViewModel
         )
     }
 }
 
-
-@SuppressLint("StateFlowValueCalledInComposition", "UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("StateFlowValueCalledInComposition", "UnrememberedMutableState")
 @Composable
 fun AddDish(
     state: DishState,
     navigationController: NavHostController,
     onEvent: (DishEvent) -> Unit,
-    categoryViewModel: CategoryViewModel
-
+    categoryViewModel: CategoryViewModel,
+    dishViewModel: DishViewModel,
 ) {
-    var selectedMainCourse by remember { mutableStateOf("Món chính") }
+    var selectedMainCourse by remember { mutableStateOf("Chọn loại") }
     var selectedDishType by remember { mutableStateOf("chọn loại món") }
     val scrollState = rememberScrollState()
-    val mainCourseOptions = listOf("Món chính", "Món phụ", "Topping")
+    val mainCourseOptions = mutableListOf<String>()
+    for (i in 0 until dishViewModel.state.value.dishs.size) {
+        mainCourseOptions.add(titleToString(
+            dishViewModel.state.value.dishs[i].title))
+    }
     val dishTypeOptions = mutableListOf<String>()
-    for (i in 0 until  categoryViewModel.state.value.categorys.size){
+    for (i in 0 until categoryViewModel.state.value.categorys.size) {
         dishTypeOptions.add(categoryViewModel.state.value.categorys[i].nameCategory)
     }
     val context = LocalContext.current
@@ -121,6 +132,14 @@ fun AddDish(
             Log.d("zzzzzzzz", "AddDish: $imageByte")
         }
     }
+
+    var idCategory by remember { mutableIntStateOf(-1) }
+    var title by remember { mutableStateOf("") }
+    var priceText by remember { mutableStateOf(state.price.value.takeIf { it != 0.0 }?.toString() ?: "") }
+    var nameDish by remember { mutableStateOf(state.nameDish.value) }
+    var isPriceError by remember { mutableStateOf(false) }
+    var isNameDishError by remember { mutableStateOf(false) }
+    var isDishTypeError by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -143,7 +162,7 @@ fun AddDish(
         ) {
             Text(text = "Thêm hình ảnh", color = Color.White)
             AsyncImage(
-                model = imageUri , // Use a default image resource
+                model = imageUri,
                 contentDescription = "",
                 modifier = Modifier
                     .padding(4.dp)
@@ -154,30 +173,32 @@ fun AddDish(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        var idCategory by remember { mutableIntStateOf(-1) }
+        DropdownMenuBox(selectedMainCourse, mainCourseOptions) {
+            selectedMainCourse = it
+        }
 
-        DropdownMenuBox(selectedMainCourse, mainCourseOptions) { selectedMainCourse = it }
         DropdownMenuBox(selectedDishType, dishTypeOptions) {
-
             selectedDishType = it
-            for (i in 0 until categoryViewModel.state.value.categorys.size){
-                if (categoryViewModel.state.value.categorys[i].nameCategory == it){
-                        idCategory = categoryViewModel.state.value.categorys[i].id
+            isDishTypeError = false
+            for (i in 0 until categoryViewModel.state.value.categorys.size) {
+                if (categoryViewModel.state.value.categorys[i].nameCategory == it) {
+                    idCategory = categoryViewModel.state.value.categorys[i].id
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        if (isDishTypeError) {
+            Text(text = "Phải chọn loại món", color = MaterialTheme.colorScheme.error)
+        }
 
-        var priceText by remember { mutableStateOf(state.price.value.toString()) }
+        Spacer(modifier = Modifier.height(8.dp))
 
         TextField(
             value = priceText,
             onValueChange = { newValue ->
                 priceText = newValue
-                newValue.toDoubleOrNull()?.let {
-                    state.price.value = it
-                }
+                state.price.value = newValue.toDoubleOrNull() ?: 0.0
+                isPriceError = newValue.toDoubleOrNull() == null || newValue.toDoubleOrNull()!! <= 0
             },
             label = { Text("Giá") },
             modifier = Modifier
@@ -187,14 +208,28 @@ fun AddDish(
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color.White
             ),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+            isError = isPriceError,
+            keyboardActions = KeyboardActions(onDone = {
+                if (priceText.isBlank() || priceText.toDoubleOrNull() == null || priceText.toDoubleOrNull()!! <= 0) {
+                    isPriceError = true
+                }
+            })
         )
+
+        if (isPriceError) {
+            Text(text = "Giá phải là một số lớn hơn 0", color = MaterialTheme.colorScheme.error)
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         TextField(
-            value = state.nameDish.value,
-            onValueChange = { state.nameDish.value = it },
+            value = nameDish,
+            onValueChange = {
+                nameDish = it
+                state.nameDish.value = it
+                isNameDishError = it.isBlank()
+            },
             label = { Text("Tên món ăn") },
             modifier = Modifier
                 .background(Color.White)
@@ -202,23 +237,43 @@ fun AddDish(
                 .padding(horizontal = 16.dp),
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color.White
-            )
+            ),
+            isError = isNameDishError,
         )
+
+        if (isNameDishError) {
+            Text(text = "Tên món ăn không được rỗng", color = MaterialTheme.colorScheme.error)
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
             onClick = {
-                if (imageByte !=null){
+                val isValid = imageByte != null && !isPriceError && nameDish.isNotBlank() && idCategory != -1
+
+                if (isValid) {
                     onEvent(DishEvent.SaveDish(
                         nameDish = state.nameDish.value,
                         price = state.price.value,
                         idCategory = idCategory,
-                        image = imageByte!!
+                        image = imageByte!!,
+                        title = state.title.value
                     ))
                     navigationController.popBackStack()
+                } else {
+                    if (imageByte == null) {
+                        Toast.makeText(context, "Chưa thêm hình ảnh", Toast.LENGTH_SHORT).show()
+                    }
+                    if (priceText.isBlank() || priceText.toDoubleOrNull() == null || priceText.toDoubleOrNull()!! <= 0) {
+                        isPriceError = true
+                    }
+                    if (nameDish.isBlank()) {
+                        isNameDishError = true
+                    }
+                    if (idCategory == -1) {
+                        isDishTypeError = true
+                    }
                 }
-
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -229,7 +284,6 @@ fun AddDish(
         }
     }
 }
-
 
 @Composable
 fun DropdownMenuBox(
@@ -287,3 +341,15 @@ fun uriToByteArray(contentResolver: ContentResolver, uri: Uri): ByteArray? {
         null
     }
 }
+
+@Composable
+fun titleToString(title: Int): String {
+    return when (title) {
+        0 -> "Món chính"
+        1 -> "Món phụ"
+        2 -> "Topping"
+        3 -> "Khác"
+        else -> "Unknown"
+    }
+}
+

@@ -18,4 +18,5 @@ interface DishDao {
     suspend fun deleteDish(dish: Dish)
     @Query("SELECT * FROM dish WHERE id = :id LIMIT 1")
     fun getidbyidDish(id: String): Dish?
+
 }
