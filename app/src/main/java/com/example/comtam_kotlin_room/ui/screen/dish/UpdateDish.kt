@@ -74,60 +74,6 @@ import com.example.comtam_kotlin_room.ui.screen.category.CategoryEvent
 import com.example.comtam_kotlin_room.ui.theme.ComTam_kotlin_roomTheme
 import com.example.comtam_kotlin_room.utils.Route
 
-//@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun UpdateDishScreen(
-//    state: DishState,
-//    navigationController: NavHostController,
-//    onEvent: (DishEvent) -> Unit
-//) {
-//
-//        Scaffold(
-//            topBar = {
-//                Column(
-//                    Modifier
-//                        .fillMaxWidth()
-//                        .background(Color(0xFF242020))
-//                ) {
-//                    TopAppBar(
-//                        title = {
-//                            Row(
-//                                modifier = Modifier
-//                                    .fillMaxWidth()
-//                                    .background(Color(0xFF242020)),
-//                                verticalAlignment = Alignment.CenterVertically
-//                            ) {
-//                                Icon(Icons.Default.ArrowBackIosNew, contentDescription ="" ,
-//                                    Modifier.clickable { navigationController.popBackStack() })
-//                                Image(
-//                                    painter = painterResource(id = R.drawable.logo),
-//                                    contentDescription ="",
-//                                    contentScale = ContentScale.Fit,
-//                                    modifier = Modifier.fillMaxWidth(0.12f)
-//                                )
-//                                Text(text = "Cum tứm đim", color = Color.White)
-//
-//                            }
-//                        },
-//                        colors = TopAppBarDefaults.topAppBarColors(
-//                            containerColor = Color(0xFF252121),
-//                            titleContentColor = Color.White,
-//                        ),
-//                    )
-//                    Divider(thickness = 2.dp, color = Color.Black)
-//                }
-//            },
-//
-//            ) {
-//            UpdateDish(
-//                state = state,
-//                onEvent = onEvent,
-//                navigationController = navigationController
-//            )
-//        }
-//
-//}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -144,6 +90,7 @@ fun UpdateDish(
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var isPriceError by remember { mutableStateOf(false) }
     var isNameDishError by remember { mutableStateOf(false) }
+    var priceErrorMessage by remember { mutableStateOf("") }
 
     val getContent = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
@@ -199,8 +146,24 @@ fun UpdateDish(
                     value = priceString,
                     onValueChange = { newValue ->
                         priceString = newValue
-                        price = newValue.toDoubleOrNull() ?: 0.0
-                        isPriceError = newValue.toDoubleOrNull() == null || newValue.toDoubleOrNull()!! <= 0
+                        isPriceError = false
+                        priceErrorMessage = ""
+
+                        if (newValue.isBlank()) {
+                            isPriceError = true
+                            priceErrorMessage = "Giá không được để trống"
+                        } else {
+                            val parsedPrice = newValue.toDoubleOrNull()
+                            if (parsedPrice == null) {
+                                isPriceError = true
+                                priceErrorMessage = "Giá phải là số"
+                            } else if (parsedPrice <= 0) {
+                                isPriceError = true
+                                priceErrorMessage = "Giá phải lớn hơn 0"
+                            } else {
+                                price = parsedPrice
+                            }
+                        }
                     },
                     label = { Text("Giá") },
                     modifier = Modifier
@@ -213,7 +176,7 @@ fun UpdateDish(
                 )
 
                 if (isPriceError) {
-                    Text(text = "Giá phải là một số lớn hơn 0", color = MaterialTheme.colorScheme.error)
+                    Text(text = priceErrorMessage, color = MaterialTheme.colorScheme.error)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -235,7 +198,7 @@ fun UpdateDish(
                 )
 
                 if (isNameDishError) {
-                    Text(text = "Tên món ăn không được rỗng", color = MaterialTheme.colorScheme.error)
+                    Text(text = "Tên món ăn không được để trống", color = MaterialTheme.colorScheme.error)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -267,6 +230,8 @@ fun UpdateDish(
         }
     )
 }
+
+
 
 
 
