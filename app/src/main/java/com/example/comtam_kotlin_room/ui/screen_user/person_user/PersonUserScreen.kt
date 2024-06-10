@@ -36,9 +36,8 @@ import androidx.navigation.NavHostController
 import com.example.comtam_kotlin_room.R
 import com.example.comtam_kotlin_room.utils.Route
 
-@Preview(showBackground = true)
 @Composable
-fun PersonUserScreen() {
+fun PersonUserScreen(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -57,12 +56,14 @@ fun PersonUserScreen() {
                     text = "Edit",
                     color = Color.White,
                     fontSize = 20.sp,
-                    modifier = Modifier.clickable { })
+                    modifier = Modifier.clickable {navController.navigate(Route.EditPersonUser.screen)})
                 Text(
                     text = "SignOut",
                     color = Color.White,
                     fontSize = 20.sp,
-                    modifier = Modifier.clickable {  })
+                    modifier = Modifier.clickable { navController.navigate(Route.LOGIN.screen){
+                        popUpTo(Route.NavigationUser.screen){inclusive = true}
+                    } })
             }
             Box(
                 modifier = Modifier
