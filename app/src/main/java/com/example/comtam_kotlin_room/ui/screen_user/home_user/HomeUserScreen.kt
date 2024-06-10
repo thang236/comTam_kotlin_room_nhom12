@@ -44,9 +44,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.comtam_kotlin_room.R
-import com.example.comtam_kotlin_room.ui.screen.dish.MenuItem
-import com.example.comtam_kotlin_room.ui.screen.dish.MenuItemCard
-import com.example.comtam_kotlin_room.utils.Route
 
 data class Foodd(val id: Int, val name: String, val price: String, val image: Int)
 

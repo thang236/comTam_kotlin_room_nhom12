@@ -9,4 +9,6 @@ import kotlinx.coroutines.flow.Flow
 interface OderCartDao {
     @Query("SELECT * FROM OderCart")
     fun getAllOderCart(): Flow<List<OderCart>>
+    @Query("UPDATE OderCart SET status = :newStatus WHERE idCart = :orderId")
+    suspend fun updateOrderStatus(orderId: Int, newStatus: Int)
 }
