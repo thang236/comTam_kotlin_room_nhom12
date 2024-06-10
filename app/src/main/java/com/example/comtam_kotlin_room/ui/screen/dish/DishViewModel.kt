@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.comtam_kotlin_room.data.DAO.DishDao
 import com.example.comtam_kotlin_room.data.entity.Dish
+import com.example.comtam_kotlin_room.data.entity.OderCart
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -24,9 +26,9 @@ class DishViewModel(
 
      lateinit var arrayByte: ByteArray
 
-
+    val all: Flow<List<Dish>> = dao.getAll()
      var dish by mutableStateOf("")
-    private val dishs = dao.getAll().stateIn(viewModelScope, SharingStarted.WhileSubscribed(),
+     val dishs = dao.getAll().stateIn(viewModelScope, SharingStarted.WhileSubscribed(),
         emptyList()
     )
     val _state = MutableStateFlow(DishState())
@@ -49,6 +51,7 @@ class DishViewModel(
                     price = event.price,
                     idCategory = event.idCategory,
                     image = event.image,
+                    type = event.type
                 )
                 viewModelScope.launch {
                     dao.upsertDish(dish)

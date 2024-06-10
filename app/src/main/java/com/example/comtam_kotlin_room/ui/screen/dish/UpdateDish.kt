@@ -36,6 +36,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Surface
@@ -137,10 +138,13 @@ fun UpdateDish(
     dish: Dish,
 ) {
     var price by remember { mutableStateOf(dish.price) }
-    val priceString = price.toString()
+    var priceString by remember { mutableStateOf(price.toString()) }
     val context = LocalContext.current
     var imageByte by remember { mutableStateOf<ByteArray>(dish.image) }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var isPriceError by remember { mutableStateOf(false) }
+    var isNameDishError by remember { mutableStateOf(false) }
+
     val getContent = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
             imageUri = it
@@ -175,11 +179,11 @@ fun UpdateDish(
                 ) {
 
                     val bitmap = BitmapFactory.decodeByteArray(
-                        imageByte,0, imageByte.size
+                        imageByte, 0, imageByte.size
                     )
 
                     Image(
-                        painter = rememberAsyncImagePainter(bitmap) ,
+                        painter = rememberAsyncImagePainter(bitmap),
                         contentDescription = null,
                         modifier = Modifier
                             .fillMaxSize()
@@ -194,7 +198,9 @@ fun UpdateDish(
                 TextField(
                     value = priceString,
                     onValueChange = { newValue ->
+                        priceString = newValue
                         price = newValue.toDoubleOrNull() ?: 0.0
+                        isPriceError = newValue.toDoubleOrNull() == null || newValue.toDoubleOrNull()!! <= 0
                     },
                     label = { Text("Giá") },
                     modifier = Modifier
@@ -202,22 +208,35 @@ fun UpdateDish(
                         .fillMaxWidth(),
                     colors = TextFieldDefaults.textFieldColors(
                         containerColor = Color.White
-                    )
+                    ),
+                    isError = isPriceError,
                 )
+
+                if (isPriceError) {
+                    Text(text = "Giá phải là một số lớn hơn 0", color = MaterialTheme.colorScheme.error)
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 TextField(
                     value = state.nameDish.value,
-                    onValueChange = { state.nameDish.value = it },
+                    onValueChange = {
+                        state.nameDish.value = it
+                        isNameDishError = it.isBlank()
+                    },
                     label = { Text("Tên món ăn") },
                     modifier = Modifier
                         .background(Color.White)
                         .fillMaxWidth(),
                     colors = TextFieldDefaults.textFieldColors(
                         containerColor = Color.White
-                    )
+                    ),
+                    isError = isNameDishError,
                 )
+
+                if (isNameDishError) {
+                    Text(text = "Tên món ăn không được rỗng", color = MaterialTheme.colorScheme.error)
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
             }
@@ -225,11 +244,13 @@ fun UpdateDish(
         confirmButton = {
             Button(
                 onClick = {
-                    dish.nameDish = state.nameDish.value
-                    dish.price = price
-                    dish.image = imageByte
-                    onEvent(DishEvent.EditDish(dish))
-                    onDismiss()
+                    if (!isPriceError && !isNameDishError) {
+                        dish.nameDish = state.nameDish.value
+                        dish.price = price
+                        dish.image = imageByte
+                        onEvent(DishEvent.EditDish(dish))
+                        onDismiss()
+                    }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA000))
             ) {
@@ -246,6 +267,8 @@ fun UpdateDish(
         }
     )
 }
+
+
 
 
 

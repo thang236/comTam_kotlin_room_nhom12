@@ -24,6 +24,7 @@ sealed class Route(val screen: String) {
     data object CartUser : Route("CartUser")
     data object PersonUser : Route("PersonUser")
     data object EditPersonUser : Route("EditPersonUser")
+    data object ChangImageUser : Route("ChangImageUser")
 
 
 

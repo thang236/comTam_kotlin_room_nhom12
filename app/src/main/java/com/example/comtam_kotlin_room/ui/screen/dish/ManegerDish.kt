@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,6 +36,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.comtam_kotlin_room.R
+import com.example.comtam_kotlin_room.data.entity.Dish
 import com.example.comtam_kotlin_room.ui.screen.category.CategoryEvent
 import com.example.comtam_kotlin_room.ui.screen.category.DialogDelete
 import com.example.comtam_kotlin_room.ui.screen.category.DialogEdit
@@ -47,7 +49,9 @@ import com.example.comtam_kotlin_room.utils.Route
 fun ManagerDishScreen(
     state: DishState,
     navigationController: NavHostController,
+    dishViewModel: DishViewModel,
     onEvent: (DishEvent) -> Unit){
+
     Scaffold(
         topBar = {
             Column(
@@ -112,13 +116,12 @@ fun ManagerDishScreen(
         }
     }
 }
-@SuppressLint("DefaultLocale")
 @Composable
 fun MenuItemCard(
     state: DishState,
     index: Int,
     onEvent: (DishEvent) -> Unit,
-    navigationController: NavHostController
+    navigationController: NavHostController,
 ) {
     var showDialogEdit by remember { mutableStateOf(false) }
     if (showDialogEdit){
@@ -158,7 +161,7 @@ fun MenuItemCard(
             if (imageByteArray != null) {
                 AsyncImage(
                     model = imageByteArray,
-                    contentDescription = state.dishs[index].nameDish, // Description using the dish name
+                    contentDescription = state.dishs[index].nameDish,
                     modifier = Modifier
                         .size(64.dp)
                         .clip(RoundedCornerShape(8.dp)),
@@ -167,7 +170,7 @@ fun MenuItemCard(
             } else {
                 Image(
                     painter = painterResource(id = R.drawable.comtam),
-                    contentDescription = state.dishs[index].nameDish, // Description using the dish name
+                    contentDescription = state.dishs[index].nameDish,
                     modifier = Modifier
                         .size(64.dp)
                         .clip(RoundedCornerShape(8.dp)),
@@ -191,35 +194,44 @@ fun MenuItemCard(
                     color = Color(0xFFFE724C)
                 )
             }
-            IconButton(
-                onClick = {
-                    showDialogEdit = true
-                    state.nameDish.value = state.dishs[index].nameDish
-                    state.price.value = state.dishs[index].price
-                    state.image.value = state.dishs[index].image
-                },
-                modifier = Modifier
-                    .size(24.dp)
+            Row(
+                modifier = Modifier.padding(end = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_create_24),
-                    contentDescription = "Chỉnh sửa món ăn",
-                    tint = Color.White
-                )
-            }
-            IconButton(
-                onClick = { showDialogDelete = true },
-                modifier = Modifier
-                    .size(24.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_delete_24),
-                    contentDescription = "Xóa món ăn",
-                    tint = Color.White
-                )
+                IconButton(
+                    onClick = {
+                        showDialogEdit = true
+                        state.nameDish.value = state.dishs[index].nameDish
+                        state.price.value = state.dishs[index].price
+                        state.image.value = state.dishs[index].image
+                    },
+                    modifier = Modifier
+                        .size(24.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_create_24),
+                        contentDescription = "Chỉnh sửa món ăn",
+                        tint = Color.White
+                    )
+                }
+                Spacer(modifier = Modifier.width(5.dp))
+                IconButton(
+                    onClick = { showDialogDelete = true },
+                    modifier = Modifier
+                        .size(24.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_delete_24),
+                        contentDescription = "Xóa món ăn",
+                        tint = Color.White
+                    )
+                }
             }
         }
     }
 }
+
+
+
 
 

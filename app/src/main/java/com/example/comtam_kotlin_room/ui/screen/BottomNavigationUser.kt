@@ -25,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -60,6 +61,7 @@ fun BottomNavigationUser( navController: NavHostController){
 fun MyBottomAppBarUser( navController: NavHostController) {
 
     val navigationController = rememberNavController()
+
     val selected = remember {
         mutableStateOf(Icons.Default.Home)
     }
@@ -97,7 +99,10 @@ fun MyBottomAppBarUser( navController: NavHostController) {
                     ),
 
                     )
-                Divider(thickness = 2.dp, color = Color.Black)
+                if ((selected.value != Icons.Default.Home)){
+                    Divider(thickness = 2.dp, color = Color.Black)
+                }
+
             }
 
         },
@@ -263,7 +268,7 @@ fun MyBottomAppBarUser( navController: NavHostController) {
                 HistoryUserScreen()
             }
             composable(Route.PersonUser.screen){
-                EditPersonUser()
+                PersonUserScreen(navController)
             }
 
 

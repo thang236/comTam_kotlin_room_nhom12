@@ -93,7 +93,6 @@ fun CartUserScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 7.dp)
             .background(Color(0xff252121))
     ) {
         Column(
