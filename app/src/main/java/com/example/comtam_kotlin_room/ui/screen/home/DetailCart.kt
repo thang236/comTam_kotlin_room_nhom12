@@ -53,7 +53,7 @@ fun DetailsCart(navHostController: NavHostController) {
       ItemCart("2", "Bì chả", "25k", "01"),
       ItemCart("3", "Bì trứng", "25k", "03"),
 
-   )
+      )
    val sideItems = listOf(
       ItemCart("1", "Chả Giò", "15k", "01"),
       ItemCart("2", "Gỏi Cuốn", "20k", "02"),
@@ -111,7 +111,7 @@ fun DetailsCart(navHostController: NavHostController) {
 
             Button(
                onClick = {
-                         navHostController.navigate(Route.Home.screen)
+                  navHostController.navigate(Route.Home.screen)
                },
                modifier = Modifier
                   .padding(end = 25.dp)
